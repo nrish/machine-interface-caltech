@@ -18,7 +18,6 @@ public:
 private slots:
     void on_startButton_clicked();
 
-    void on_connect_clicked();
 
     void onSerialReceivedDataSignal();
 
@@ -26,6 +25,7 @@ private slots:
 
     void onPortDisconnect();
 
+    void on_pushConnect_pressed();
 private:
     Ui::MainWindow *ui;
 };

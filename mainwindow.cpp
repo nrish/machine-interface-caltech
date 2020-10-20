@@ -82,8 +82,16 @@ void MainWindow::on_startButton_clicked()
     port.waitForReadyRead(1000);
     port.readAll();
 }
-void MainWindow::on_connect_clicked()
+
+void MainWindow::on_stopButton_clicked()
 {
+    char a = 0x03;
+    port.write(&a, 1);
+}
+
+
+void MainWindow::on_pushConnect_pressed()
+{ //empty
     ui->frame->setEnabled(true);
     port.setPort(QSerialPortInfo(ui->portCombo->currentText()));
     port.setBaudRate(QSerialPort::Baud19200);
@@ -92,10 +100,4 @@ void MainWindow::on_connect_clicked()
         port.open(QIODevice::ReadWrite);
         ui->frame->setEnabled(true);
     }
-}
-
-void MainWindow::on_stopButton_clicked()
-{
-    char a = 0x03;
-    port.write(&a, 1);
 }

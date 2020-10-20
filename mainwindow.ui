@@ -137,6 +137,9 @@
           </item>
           <item row="2" column="1">
            <widget class="QSpinBox" name="endWell">
+            <property name="minimum">
+             <number>1</number>
+            </property>
             <property name="maximum">
              <number>96</number>
             </property>
@@ -163,6 +166,12 @@
            <widget class="QSpinBox" name="timeWell">
             <property name="suffix">
              <string> ms</string>
+            </property>
+            <property name="minimum">
+             <number>200</number>
+            </property>
+            <property name="maximum">
+             <number>9999</number>
             </property>
            </widget>
           </item>
