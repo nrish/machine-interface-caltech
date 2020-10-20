@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>327</width>
-    <height>457</height>
+    <width>523</width>
+    <height>501</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -21,151 +21,189 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>port select</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="portCombo"/>
-      </item>
-      <item>
-       <widget class="QPushButton" name="connect">
-        <property name="text">
-         <string>connect</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="1" column="1">
-     <widget class="QFrame" name="inputBox">
-      <property name="enabled">
-       <bool>true</bool>
+    <item row="0" column="0" colspan="2">
+     <widget class="QGroupBox" name="groupBoxDevice">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <property name="maximumSize">
-       <size>
-        <width>271</width>
-        <height>271</height>
-       </size>
+      <property name="title">
+       <string>Device</string>
       </property>
-      <property name="autoFillBackground">
-       <bool>false</bool>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QComboBox" name="trayCombo">
-           <item>
-            <property name="text">
-             <string>Tray 1</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Tray 2</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Tray 3</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Tray 4</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Tray 5</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Tray 6</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Tray 7</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Tray 8</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Tray 9</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Tray 10</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_2">
-           <property name="text">
-            <string>End well index</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QSpinBox" name="endWell">
-           <property name="maximum">
-            <number>96</number>
-           </property>
-           <property name="value">
-            <number>96</number>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>milliseconds per well</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPlainTextEdit" name="timeInput"/>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QProgressBar" name="progressBar">
-         <property name="value">
-          <number>0</number>
+        <widget class="QLabel" name="label_4">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Port Select</string>
          </property>
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QPushButton" name="startButton">
-           <property name="text">
-            <string>Start seqence</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="stopButton">
-           <property name="text">
-            <string>Stop</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <widget class="QComboBox" name="portCombo"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushConnect">
+         <property name="text">
+          <string>connect</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="QFrame" name="frame">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QGroupBox" name="groupBoxSettings">
+         <property name="title">
+          <string>Settings</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="1" column="1">
+           <widget class="QComboBox" name="trayCombo">
+            <item>
+             <property name="text">
+              <string>Tray 1</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 2</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 3</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 4</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 5</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 6</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 7</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 8</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 9</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 10</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Tray</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QSpinBox" name="endWell">
+            <property name="maximum">
+             <number>96</number>
+            </property>
+            <property name="value">
+             <number>96</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>End well index</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Milliseconds per well</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QSpinBox" name="timeWell">
+            <property name="suffix">
+             <string> ms</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxStatus">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Status</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="4" column="0" colspan="2">
+           <widget class="QProgressBar" name="progressBar">
+            <property name="value">
+             <number>0</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QPushButton" name="startButton">
+            <property name="text">
+             <string>Start seqence</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="stopButton">
+            <property name="text">
+             <string>Stop</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -177,12 +215,42 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>327</width>
-     <height>31</height>
+     <width>523</width>
+     <height>24</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>Information</string>
+    </property>
+    <widget class="QMenu" name="menuTray_Layout">
+     <property name="title">
+      <string>Tray Layout</string>
+     </property>
+     <addaction name="actionTray_Layout_2"/>
+     <addaction name="actionWell_Layout"/>
+    </widget>
+    <addaction name="actionAbout"/>
+    <addaction name="menuTray_Layout"/>
+   </widget>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionTray_Layout_2">
+   <property name="text">
+    <string>Tray Layout</string>
+   </property>
+  </action>
+  <action name="actionWell_Layout">
+   <property name="text">
+    <string>Well Layout</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

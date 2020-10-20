@@ -1,0 +1,39 @@
+[Buildset]
+BuildItems=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x01\x00\x00\x00\x0b\x00\x00\x00\x00\x01\x00\x00\x002\x00m\x00a\x00c\x00h\x00i\x00n\x00e\x00-\x00i\x00n\x00t\x00e\x00r\x00f\x00a\x00c\x00e\x00-\x00c\x00a\x00l\x00t\x00e\x00c\x00h)
+
+[Launch]
+Launch Configurations=Launch Configuration 0
+
+[Launch][Launch Configuration 0]
+Configured Launch Modes=execute
+Configured Launchers=nativeAppLauncher
+Name=New Compiled Binary Launcher
+Type=Native Application
+
+[Launch][Launch Configuration 0][Data]
+Arguments=
+Dependencies=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x00)
+Dependency Action=Nothing
+EnvironmentGroup=
+Executable=file:///home/forrest/Documents/Project Fall 2020/machine-interface-caltech
+External Terminal=konsole --noclose --workdir %workdir -e %exe
+Project Target=machine-interface-caltech,Caltech-GUI
+Use External Terminal=false
+Working Directory=
+isExecutable=false
+
+[Project]
+VersionControlSupport=kdevgit
+
+[QMake_Builder]
+Build_Folder=/home/forrest/Documents/Project Fall 2020/machine-interface-caltech/build
+Build_Type=0
+Extra_Arguments=
+Install_Prefix=
+QMake_Binary=/usr/bin/qmake
+
+[QMake_Builder][/home/forrest/Documents/Project Fall 2020/machine-interface-caltech/build]
+Build_Type=0
+Extra_Arguments=
+Install_Prefix=
+QMake_Binary=/usr/bin/qmake

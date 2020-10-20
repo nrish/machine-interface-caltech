@@ -1,24 +1,25 @@
+
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include "ui_mainwindow.h"
 #include <string>
 #include <QDebug>
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <QMessageBox>
+
 QSerialPort port;
 int tally = 0;
 int totalWells = 0;
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+
+MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
     connect(&port, &QSerialPort::readyRead, this, &MainWindow::onSerialReceivedDataSignal);
     connect(&port, &QSerialPort::aboutToClose, this, &MainWindow::onPortDisconnect);
 
     ui->setupUi(this);
-    ui->progressBar->setValue(0);
-    ui->endWell->setRange(0,96);
-    ui->inputBox->setEnabled(false);
+    //ui->progressBar->setValue(0);
+    //ui->endWell->setRange(0,96);
+    ui->frame->setEnabled(false);
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
         qDebug() << "Name : " << info.portName();
         qDebug() << "Description : " << info.description();
@@ -43,7 +44,7 @@ void MainWindow::onSerialReceivedDataSignal(){
 }
 
 void MainWindow::onPortDisconnect(){
-    ui->inputBox->setEnabled(false);
+    ui->frame->setEnabled(false);
 }
 
 void MainWindow::on_startButton_clicked()
@@ -53,6 +54,11 @@ void MainWindow::on_startButton_clicked()
     uint16_t endWell = ui->endWell->value();
     uint32_t timePerWell = 0;
     totalWells = ui->endWell->value();
+    
+    //Replace below with...
+    timePerWell = ui->timeWell->value();
+    
+    /* Not sure...
     try{
         timePerWell = std::stoul(ui->timeInput->toPlainText().toStdString());
     }catch(std::exception e){
@@ -63,6 +69,7 @@ void MainWindow::on_startButton_clicked()
         message.exec();
         return;
     }
+    */
 
     //start + end well have 4, timer per well has 4
     char bytes[10];
@@ -77,13 +84,13 @@ void MainWindow::on_startButton_clicked()
 }
 void MainWindow::on_connect_clicked()
 {
-    ui->inputBox->setEnabled(true);
+    ui->frame->setEnabled(true);
     port.setPort(QSerialPortInfo(ui->portCombo->currentText()));
     port.setBaudRate(QSerialPort::Baud19200);
     port.setDataBits(QSerialPort::Data8);
     if(!QSerialPortInfo(port).isBusy()){
         port.open(QIODevice::ReadWrite);
-        ui->inputBox->setEnabled(true);
+        ui->frame->setEnabled(true);
     }
 }
 
