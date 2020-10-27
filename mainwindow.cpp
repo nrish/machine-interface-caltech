@@ -8,6 +8,7 @@
 #include <QMessageBox>
 
 QSerialPort port;
+QSerialPortInfo info;
 int tally = 0;
 int totalWells = 0;
 
@@ -24,7 +25,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         qDebug() << "Name : " << info.portName();
         qDebug() << "Description : " << info.description();
         ui->portCombo->addItem(info.portName());
-
      }
 }
 
@@ -54,13 +54,9 @@ void MainWindow::on_startButton_clicked()
     uint16_t endWell = ui->endWell->value();
     uint32_t timePerWell = 0;
     totalWells = ui->endWell->value();
-    
-    //Replace below with...
-    timePerWell = ui->timeWell->value();
-    
-    /* Not sure...
+
     try{
-        timePerWell = std::stoul(ui->timeInput->toPlainText().toStdString());
+        timePerWell = std::stoul(ui->timeInput->text().toStdString());
     }catch(std::exception e){
         QMessageBox message(this);
         message.setText("Invalid time input");
@@ -69,7 +65,6 @@ void MainWindow::on_startButton_clicked()
         message.exec();
         return;
     }
-    */
 
     //start + end well have 4, timer per well has 4
     char bytes[10];
@@ -91,13 +86,16 @@ void MainWindow::on_stopButton_clicked()
 
 
 void MainWindow::on_pushConnect_pressed()
-{ //empty
-    ui->frame->setEnabled(true);
-    port.setPort(QSerialPortInfo(ui->portCombo->currentText()));
-    port.setBaudRate(QSerialPort::Baud19200);
-    port.setDataBits(QSerialPort::Data8);
-    if(!QSerialPortInfo(port).isBusy()){
-        port.open(QIODevice::ReadWrite);
+{
+    if(ui->portCombo->currentText() != ""){
+
         ui->frame->setEnabled(true);
+        port.setPort(QSerialPortInfo(ui->portCombo->currentText()));
+        port.setBaudRate(QSerialPort::Baud19200);
+        port.setDataBits(QSerialPort::Data8);
+        if(!QSerialPortInfo(port).isBusy()){
+            port.open(QIODevice::ReadWrite);
+            ui->frame->setEnabled(true);
+        }
     }
 }
