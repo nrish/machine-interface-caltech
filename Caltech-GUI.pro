@@ -10,10 +10,12 @@ CONFIG += c++11 static
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    uint32spinbox.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    uint32spinbox.h
 
 FORMS += \
     mainwindow.ui

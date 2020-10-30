@@ -1,5 +1,6 @@
 
 #include "mainwindow.h"
+#include "uint32spinbox.h"
 #include "ui_mainwindow.h"
 #include <string>
 #include <QDebug>
@@ -18,8 +19,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     connect(&port, &QSerialPort::aboutToClose, this, &MainWindow::onPortDisconnect);
 
     ui->setupUi(this);
-    //ui->progressBar->setValue(0);
-    //ui->endWell->setRange(0,96);
     ui->frame->setEnabled(false);
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
         qDebug() << "Name : " << info.portName();
@@ -52,9 +51,10 @@ void MainWindow::on_startButton_clicked()
     tally = 0;
     ui->progressBar->setValue(0);
     uint16_t endWell = ui->endWell->value();
-    uint32_t timePerWell = 0;
+    uint32_t timePerWell = ui->spinTimeWell->value();
     totalWells = ui->endWell->value();
 
+    /*
     try{
         timePerWell = std::stoul(ui->timeInput->text().toStdString());
     }catch(std::exception e){
@@ -65,6 +65,7 @@ void MainWindow::on_startButton_clicked()
         message.exec();
         return;
     }
+    */
 
     //start + end well have 4, timer per well has 4
     char bytes[10];
