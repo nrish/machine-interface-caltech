@@ -25,6 +25,8 @@ private slots:
     void onPortDisconnect();
 
     void on_pushConnect_pressed();
+
+    void on_actionTrayWell_triggered(bool);
 private:
     Ui::MainWindow *ui;
 };

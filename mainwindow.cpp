@@ -2,11 +2,14 @@
 #include "mainwindow.h"
 #include "uint32spinbox.h"
 #include "ui_mainwindow.h"
+//#include "qresource.h"
+#include "imagedialog.h"
 #include <string>
 #include <QDebug>
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include <QMessageBox>
+#include <QAction>
 
 QSerialPort port;
 QSerialPortInfo info;
@@ -15,11 +18,13 @@ int totalWells = 0;
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
-    connect(&port, &QSerialPort::readyRead, this, &MainWindow::onSerialReceivedDataSignal);
-    connect(&port, &QSerialPort::aboutToClose, this, &MainWindow::onPortDisconnect);
-
     ui->setupUi(this);
     ui->frame->setEnabled(false);
+
+    connect(&port, &QSerialPort::readyRead, this, &MainWindow::onSerialReceivedDataSignal);
+    connect(&port, &QSerialPort::aboutToClose, this, &MainWindow::onPortDisconnect);
+    connect(ui->actionWell_Layout, QOverload<bool>::of(&QAction::triggered), this, &MainWindow::on_actionTrayWell_triggered);
+
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
         qDebug() << "Name : " << info.portName();
         qDebug() << "Description : " << info.description();
@@ -99,4 +104,11 @@ void MainWindow::on_pushConnect_pressed()
             ui->frame->setEnabled(true);
         }
     }
+}
+
+void MainWindow::on_actionTrayWell_triggered(bool)
+{
+    auto dialog = new ImageDialog(this, ":/images/96-well-temp-diagram.png", "Well Diagram");
+    dialog->exec();
+    delete dialog;
 }

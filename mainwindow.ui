@@ -231,6 +231,7 @@
     </widget>
     <addaction name="actionAbout"/>
     <addaction name="menuTray_Layout"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menuAbout"/>
   </widget>
