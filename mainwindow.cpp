@@ -10,9 +10,9 @@
 #include <QSerialPortInfo>
 #include <QMessageBox>
 #include <QAction>
+#include "serialmanager.h"
 
-QSerialPort port;
-QSerialPortInfo info;
+SerialManager serialManager;
 int tally = 0;
 int totalWells = 0;
 
@@ -20,9 +20,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 {
     ui->setupUi(this);
     ui->frame->setEnabled(false);
-
-    connect(&port, &QSerialPort::readyRead, this, &MainWindow::onSerialReceivedDataSignal);
-    connect(&port, &QSerialPort::aboutToClose, this, &MainWindow::onPortDisconnect);
     connect(ui->actionWell_Layout, QOverload<bool>::of(&QAction::triggered), this, &MainWindow::on_actionTrayWell_triggered);
 
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
@@ -36,19 +33,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::onSerialReceivedDataSignal(){
-    char a = 0;
-    port.read(&a, 1);
-    if(a == 0x01){
-        tally++;
-        ui->progressBar->setValue(((float)tally/totalWells) * 100);
-    }
-}
-
-void MainWindow::onPortDisconnect(){
-    ui->frame->setEnabled(false);
 }
 
 void MainWindow::on_startButton_clicked()

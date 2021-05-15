@@ -18,11 +18,7 @@ public:
 private slots:
     void on_startButton_clicked();
 
-    void onSerialReceivedDataSignal();
-
     void on_stopButton_clicked();
-
-    void onPortDisconnect();
 
     void on_pushConnect_pressed();
 

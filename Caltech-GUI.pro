@@ -9,17 +9,23 @@ CONFIG += c++11 static
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    calibrationdialog.cpp \
     imagedialog.cpp \
     main.cpp \
     mainwindow.cpp \
+    serialmanager.cpp \
     uint32spinbox.cpp
 
 HEADERS += \
+    calibrationdialog.h \
     imagedialog.h \
     mainwindow.h \
-    uint32spinbox.h
+    serialmanager.h \
+    uint32spinbox.h \
+    serialData.h
 
 FORMS += \
+    calibrationdialog.ui \
     imagedialog.ui \
     mainwindow.ui
 
