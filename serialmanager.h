@@ -6,6 +6,7 @@
 
 class SerialManager : public QObject
 {
+    Q_OBJECT
 private:
     std::queue<uint8_t> log;
     QSerialPort conn;
@@ -26,6 +27,11 @@ public:
     void getData(uint8_t* buf, int amount);
     void connectToPort(QSerialPortInfo port);
     int getBytesReady();
+    bool serialConnected();
+    QSerialPort& getSerialPort();
+    virtual ~SerialManager();
+    void disconnect();
+
 public slots:
     /**
      * @brief dataRecieved slot triggered when data is received from port
@@ -40,5 +46,7 @@ public slots:
      * @brief onAboutToClose called when port is going to close
      */
     void onAboutToClose();
+signals:
+    void statusUpdate();
 };
 #endif // SERIALMANAGER_H

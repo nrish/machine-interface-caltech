@@ -142,13 +142,6 @@
           <string>Status</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="4" column="0" colspan="2">
-           <widget class="QProgressBar" name="progressBar">
-            <property name="value">
-             <number>0</number>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="0">
            <widget class="QPushButton" name="startButton">
             <property name="text">
@@ -160,6 +153,20 @@
            <widget class="QPushButton" name="stopButton">
             <property name="text">
              <string>Stop</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QPushButton" name="pushButton">
+            <property name="text">
+             <string>Calibrate</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="3">
+           <widget class="QProgressBar" name="progressBar">
+            <property name="value">
+             <number>0</number>
             </property>
            </widget>
           </item>
@@ -198,6 +205,13 @@
         <widget class="QComboBox" name="portCombo"/>
        </item>
        <item>
+        <widget class="QPushButton" name="refreshButton">
+         <property name="text">
+          <string>refresh</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="pushConnect">
          <property name="text">
           <string>connect</string>
@@ -229,7 +243,6 @@
      <addaction name="actionTray_Layout_2"/>
      <addaction name="actionWell_Layout"/>
     </widget>
-    <addaction name="actionCalibration"/>
     <addaction name="actionAbout"/>
     <addaction name="menuTray_Layout"/>
     <addaction name="separator"/>

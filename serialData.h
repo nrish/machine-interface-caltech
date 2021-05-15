@@ -7,20 +7,19 @@
  */
 
 struct __attribute__((__packed__)) Tray{
-  int x; // index 0
-  int y; // index 1
+  uint16_t x; // index 0
+  uint16_t y; // index 1
 };
 
 struct __attribute__((__packed__)) StartData{
   uint8_t start_mode; //start mode can be 0 or 1 respectively normal run and calibration
   uint32_t mills; //ms/w
-  uint8_t end_well_index;
+  uint8_t endWellIndex;
   uint8_t tray_index;
-  Tray trayData;
 };
 
 union StartDataSerialized{
-  StartData StartData;
+  StartData startData;
   uint8_t bytes[sizeof(StartData)];
 };
 
@@ -28,11 +27,11 @@ union StartDataSerialized{
 //EEPROM serializable data
 
 struct __attribute__((__packed__)) CalibrationValues{
-  uint8_t WELL_DIST_X;
-  uint8_t WELL_DIST_Y;
+  uint16_t WELL_DIST_X;
+  uint16_t WELL_DIST_Y;
   
-  uint8_t TRAY_DIST_X;
-  uint8_t TRAY_DIST_Y;
+  uint16_t TRAY_DIST_X;
+  uint16_t TRAY_DIST_Y;
 
   bool Y_END_DIR;
   bool X_END_DIR;

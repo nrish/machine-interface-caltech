@@ -2,7 +2,6 @@
 #include "mainwindow.h"
 #include "uint32spinbox.h"
 #include "ui_mainwindow.h"
-//#include "qresource.h"
 #include "imagedialog.h"
 #include <string>
 #include <QDebug>
@@ -11,17 +10,18 @@
 #include <QMessageBox>
 #include <QAction>
 #include "serialmanager.h"
-
+#include "serialData.h"
+#include "calibrationdialog.h"
 SerialManager serialManager;
 int tally = 0;
 int totalWells = 0;
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
+    qDebug() << sizeof(CalibrationValues);
     ui->setupUi(this);
     ui->frame->setEnabled(false);
     connect(ui->actionWell_Layout, QOverload<bool>::of(&QAction::triggered), this, &MainWindow::on_actionTrayWell_triggered);
-
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
         qDebug() << "Name : " << info.portName();
         qDebug() << "Description : " << info.description();
@@ -39,52 +39,28 @@ void MainWindow::on_startButton_clicked()
 {
     tally = 0;
     ui->progressBar->setValue(0);
-    uint16_t endWell = ui->endWell->value();
-    uint32_t timePerWell = ui->spinTimeWell->value();
-    totalWells = ui->endWell->value();
-
-    /*
-    try{
-        timePerWell = std::stoul(ui->timeInput->text().toStdString());
-    }catch(std::exception e){
-        QMessageBox message(this);
-        message.setText("Invalid time input");
-        message.setInformativeText("Make sure time input field contains numeral characters only.");
-        message.setStandardButtons(QMessageBox::Ok);
-        message.exec();
-        return;
-    }
-    */
-
-    //start + end well have 4, timer per well has 4
-    char bytes[10];
-    ((uint32_t*)(bytes))[0] = timePerWell;
-    qDebug() << timePerWell;
-    ((uint16_t*)(bytes))[3] = endWell;
-    ((uint16_t*)(bytes))[4] = (uint16_t)ui->trayCombo->currentIndex();
-    port.write(bytes, 10);
-    //wait for machine to reply
-    port.waitForReadyRead(1000);
-    port.readAll();
+    StartData startData;
+    StartDataSerialized serialized;
+    startData.start_mode = 0;
+    startData.endWellIndex = ui->endWell->value();
+    startData.mills = ui->spinTimeWell->value();
+    startData.tray_index = ui->trayCombo->currentIndex();
+    serialized.startData = startData;
+    serialManager.sendData(serialized.bytes, sizeof(startData));
 }
 
 void MainWindow::on_stopButton_clicked()
 {
-    char a = 0x03;
-    port.write(&a, 1);
+    uint8_t a = 0x03;
+    serialManager.sendData(&a, 1);
 }
 
 
 void MainWindow::on_pushConnect_pressed()
 {
     if(ui->portCombo->currentText() != ""){
-
-        ui->frame->setEnabled(true);
-        port.setPort(QSerialPortInfo(ui->portCombo->currentText()));
-        port.setBaudRate(QSerialPort::Baud19200);
-        port.setDataBits(QSerialPort::Data8);
-        if(!QSerialPortInfo(port).isBusy()){
-            port.open(QIODevice::ReadWrite);
+        serialManager.connectToPort(QSerialPortInfo(ui->portCombo->currentText()));
+        if(serialManager.serialConnected()){
             ui->frame->setEnabled(true);
         }
     }
@@ -96,3 +72,21 @@ void MainWindow::on_actionTrayWell_triggered(bool)
     dialog->exec();
     delete dialog;
 }
+
+void MainWindow::on_refreshButton_clicked()
+{
+    foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
+        qDebug() << "Name : " << info.portName();
+        qDebug() << "Description : " << info.description();
+        ui->portCombo->addItem(info.portName());
+     }
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    auto dialog = new CalibrationDialog(this, serialManager);
+    dialog->exec();
+    delete dialog;
+}
+

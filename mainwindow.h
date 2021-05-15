@@ -23,6 +23,10 @@ private slots:
     void on_pushConnect_pressed();
 
     void on_actionTrayWell_triggered(bool);
+    void on_refreshButton_clicked();
+
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
