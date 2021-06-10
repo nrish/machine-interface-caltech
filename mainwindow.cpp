@@ -75,6 +75,7 @@ void MainWindow::on_actionTrayWell_triggered(bool)
 
 void MainWindow::on_refreshButton_clicked()
 {
+    ui->portCombo->clear();
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
         qDebug() << "Name : " << info.portName();
         qDebug() << "Description : " << info.description();

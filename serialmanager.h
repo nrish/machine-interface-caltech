@@ -8,7 +8,6 @@ class SerialManager : public QObject
 {
     Q_OBJECT
 private:
-    std::queue<uint8_t> log;
     QSerialPort conn;
     bool connected;
 public:

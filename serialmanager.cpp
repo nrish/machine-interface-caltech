@@ -18,10 +18,7 @@ void SerialManager::sendData(uint8_t *buf, int size)
 
 void SerialManager::getData(uint8_t *buf, int len)
 {
-    for(int i = 0; i < len; i++){
-        buf[i] = log.front();
-        log.pop();
-    }
+    conn.read((char*)buf, len);
 }
 
 void SerialManager::connectToPort(QSerialPortInfo port){
@@ -39,7 +36,7 @@ void SerialManager::connectToPort(QSerialPortInfo port){
 
 int SerialManager::getBytesReady()
 {
-    return log.size();
+    return conn.bytesAvailable();
 }
 
 bool SerialManager::serialConnected()
@@ -62,14 +59,7 @@ void SerialManager::disconnect()
 }
 
 void SerialManager::dataRecieved(){
-    qDebug() << log.size();
-    char data;
-    char* ptr = &data;
-    //write data into log queue until nothing is left.
-    while(!conn.atEnd()){
-        conn.read(ptr, 1);
-        log.push(data);
-    }
+    qDebug() << conn.bytesAvailable();
     emit statusUpdate();
 }
 

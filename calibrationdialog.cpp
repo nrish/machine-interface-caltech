@@ -15,17 +15,20 @@ CalibrationDialog::CalibrationDialog(QWidget *parent, SerialManager& serialManag
     ui->trayYDist->setRange(0,5000);
     ui->wellXDist->setRange(0, 5000);
     ui->wellYDist->setRange(0, 5000);
-    this->doneLoading = false;
+
     StartData data;
     data.start_mode = 1;
     StartDataSerialized startDataSerialized;
     startDataSerialized.startData = data;
     serialManager.sendData(startDataSerialized.bytes, sizeof(StartData));
+
     serialManager.getSerialPort().waitForReadyRead();
+
     EEPROMData serializedValues;
-    serializedValues.values = values;
+    serializedValues.values = this->values;
     serialManager.getData(serializedValues.bytes, sizeof(CalibrationValues));
-    this->doneLoading = true;
+    this->values = serializedValues.values;
+
     ui->trayXDist->setValue(values.TRAY_DIST_X);
     ui->trayYDist->setValue(values.TRAY_DIST_Y);
     ui->wellXDist->setValue(values.WELL_DIST_X);
@@ -44,8 +47,8 @@ void CalibrationDialog::on_DialogButtons_accepted()
 {
     this->values.TRAY_DIST_X = (uint16_t)ui->trayXDist->value();
     this->values.TRAY_DIST_Y = (uint16_t)ui->trayYDist->value();
-    this->values.WELL_DIST_X = (uint16_t)ui->wellXDist->value();
-    this->values.WELL_DIST_Y = (uint16_t)ui->wellYDist->value();
+    this->values.WELL_DIST_X = (int16_t)ui->wellXDist->value();
+    this->values.WELL_DIST_Y = (int16_t)ui->wellYDist->value();
     this->values.X_END_DIR = (bool)ui->xAxisDir->isChecked();
     this->values.Y_END_DIR = (bool)ui->yAxisDir->isChecked();
     EEPROMData serializedValues;
@@ -57,20 +60,20 @@ void CalibrationDialog::on_DialogButtons_accepted()
 
 void CalibrationDialog::on_traySelect_currentIndexChanged(int index)
 {
-    ui->TrayX->setValue(values.trays[index].x);
-    ui->TrayY->setValue(values.trays[index].y);
+    ui->TrayX->setValue(this->values.trays[index].x);
+    ui->TrayY->setValue(this->values.trays[index].y);
 }
 
 
 void CalibrationDialog::on_TrayX_valueChanged(int i)
 {
-    values.trays[ui->traySelect->currentIndex()].x = (uint8_t)ui->TrayX->value();
+    this->values.trays[ui->traySelect->currentIndex()].x = ui->TrayX->value();
 }
 
 
 void CalibrationDialog::on_TrayY_valueChanged(int i)
 {
-    values.trays[ui->traySelect->currentIndex()].x = (uint8_t)ui->TrayX->value();
+    this->values.trays[ui->traySelect->currentIndex()].y = ui->TrayY->value();
 }
 
 void CalibrationDialog::serialStatusUpdate()
