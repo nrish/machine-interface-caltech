@@ -10,7 +10,7 @@
 #include <QMessageBox>
 #include <QAction>
 #include "serialmanager.h"
-#include "serialData.h"
+#include "serialData/serialData.h"
 #include "calibrationdialog.h"
 SerialManager serialManager;
 int tally = 0;
@@ -44,15 +44,14 @@ void MainWindow::on_startButton_clicked()
     startData.start_mode = 0;
     startData.endWellIndex = ui->endWell->value();
     startData.mills = ui->spinTimeWell->value();
-    startData.tray_index = ui->trayCombo->currentIndex();
+    startData.trayIndex = ui->trayCombo->currentIndex();
     serialized.startData = startData;
     serialManager.sendData(serialized.bytes, sizeof(startData));
 }
 
 void MainWindow::on_stopButton_clicked()
 {
-    uint8_t a = 0x03;
-    serialManager.sendData(&a, 1);
+
 }
 
 

@@ -1,51 +1,44 @@
 #include "serialmanager.h"
+#include "exception"
 #include "string"
-SerialManager::SerialManager()
+#include <mutex>
+
+SerialManager::SerialManager(QSerialPortInfo port)
 {
-    this->connected = false;
-    connect(&this->conn, &QSerialPort::readyRead, this, &SerialManager::dataRecieved);
-    connect(&this->conn, &QSerialPort::errorOccurred, this, &SerialManager::onError);
+    sock.setPort(port);
+    connect(&this->sock, &QSerialPort::readyRead, this, &SerialManager::dataRecieved);
+    connect(&this->sock, &QSerialPort::errorOccurred, this, &SerialManager::onError);
 
 }
 
-void SerialManager::sendData(uint8_t *buf, int size)
+void SerialManager::run()
 {
-    if(conn.isOpen() && conn.isWritable()){
-        conn.write((char*)buf, size);
-        conn.flush();
+    sock.setParity(QSerialPort::NoParity);
+    sock.setStopBits(QSerialPort::OneStop);
+    sock.setFlowControl(QSerialPort::NoFlowControl);
+    sock.setBaudRate(QSerialPort::Baud19200);
+    sock.setDataBits(QSerialPort::Data8);
+    if (sock.open(QIODevice::ReadWrite)) {
+        while(!this->isInterruptionRequested()){
+            if(sock.bytesAvailable() > 0){
+                buff.append(sock.readAll());
+            }
+        }
+    }else{
+        //attempt reconnect?
+        emit connectionTerminated();
     }
+    //wait for connected signal
 }
 
-void SerialManager::getData(uint8_t *buf, int len)
-{
-    conn.read((char*)buf, len);
-}
-
-void SerialManager::connectToPort(QSerialPortInfo port){
-    conn.setPort(port);
-    conn.setParity(QSerialPort::NoParity);
-    conn.setStopBits(QSerialPort::OneStop);
-    conn.setFlowControl(QSerialPort::NoFlowControl);
-    conn.setBaudRate(QSerialPort::Baud19200);
-    conn.setDataBits(QSerialPort::Data8);
-    if(!QSerialPortInfo(port).isBusy()){
-        conn.open(QIODevice::ReadWrite);
-        this->connected = true;
-    }
-}
-
-int SerialManager::getBytesReady()
-{
-    return conn.bytesAvailable();
-}
 
 bool SerialManager::serialConnected()
 {
-    return this->connected;
+    return sock.isOpen();
 }
 
 QSerialPort& SerialManager::getSerialPort(){
-    return this->conn;
+    return this->sock;
 }
 
 SerialManager::~SerialManager()
@@ -55,19 +48,18 @@ SerialManager::~SerialManager()
 
 void SerialManager::disconnect()
 {
-    this->conn.disconnect();
+    this->sock.disconnect();
 }
 
 void SerialManager::dataRecieved(){
-    qDebug() << conn.bytesAvailable();
-    emit statusUpdate();
+    buff.append(sock.readAll());
 }
 
 void SerialManager::onError(QSerialPort::SerialPortError){
-    this->connected = false;
+    //?
 }
 
 void SerialManager::onAboutToClose()
 {
-    this->connected = false;
+    //?
 }

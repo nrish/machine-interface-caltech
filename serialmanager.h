@@ -3,33 +3,22 @@
 #include <QtSerialPort>
 #include <queue>
 #include <stdint.h>
+#include "serialData/serialData.h"
+#include <mutex>
 
 class SerialManager : public QThread
 {
     Q_OBJECT
 private:
-    QSerialPort conn;
-    bool connected;
+    QSerialPort sock;
+    QByteArray buff;
+    SerialManager(QSerialPortInfo port);
+    void run();
+    virtual ~SerialManager();
 public:
-    SerialManager();
-    /**
-     * @brief sendData writes data in buffer to serial port
-     * @param buf buffer to write
-     * @param size size of the buffer
-     */
-    void sendData(uint8_t* buf, int size);
-    /**
-     * @brief readData reads into buf from queue until amount is reached or no more data is available.
-     * @param buf buffer to store bytes in
-     * @param amount number of bytes to store
-     */
-    void getData(uint8_t* buf, int amount);
-    void connectToPort(QSerialPortInfo port);
-    int getBytesReady();
+    void disconnect();
     bool serialConnected();
     QSerialPort& getSerialPort();
-    virtual ~SerialManager();
-    void disconnect();
 
 public slots:
     /**
@@ -45,7 +34,24 @@ public slots:
      * @brief onAboutToClose called when port is going to close
      */
     void onAboutToClose();
+    /**
+     * @brief sends data over serial
+     */
+    void sendData(QByteArray data);
+
+    void connected();
 signals:
-    void statusUpdate();
+    /**
+     * @brief calibrationDataRecieved got calibration data form arduino
+     * @param data
+     */
+    void calibrationDataRecieved(CalibrationValueSerialized data);
+    /**
+     * @brief updateDataRecieved arduino updated it status
+     * @param data
+     */
+    void updateDataRecieved(updateDataSerialized data);
+
+    void connectionTerminated();
 };
 #endif // SERIALMANAGER_H
