@@ -12,8 +12,8 @@ void SerialManager::sendData(uint8_t *buf, int size)
 {
     if(conn.isOpen() && conn.isWritable()){
         conn.write((char*)buf, size);
+        conn.flush();
     }
-    conn.flush();
 }
 
 void SerialManager::getData(uint8_t *buf, int len)

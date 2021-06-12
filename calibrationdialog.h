@@ -1,6 +1,6 @@
 #ifndef CALIBRATIONDIALOG_H
 #define CALIBRATIONDIALOG_H
-#include "serialData.h"
+#include "serialData/serialData.h"
 #include <QDialog>
 #include "serialmanager.h"
 namespace Ui {

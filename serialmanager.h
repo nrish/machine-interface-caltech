@@ -4,7 +4,7 @@
 #include <queue>
 #include <stdint.h>
 
-class SerialManager : public QObject
+class SerialManager : public QThread
 {
     Q_OBJECT
 private:

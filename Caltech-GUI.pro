@@ -20,6 +20,7 @@ HEADERS += \
     calibrationdialog.h \
     imagedialog.h \
     mainwindow.h \
+    serialData/serialData.h \
     serialmanager.h \
     uint32spinbox.h \
     serialData.h
