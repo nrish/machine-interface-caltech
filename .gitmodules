@@ -1,0 +1,3 @@
+[submodule "serialData"]
+	path = serialData
+	url = git@github.com:nrish/caltech-serialData.git
