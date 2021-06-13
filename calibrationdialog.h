@@ -11,10 +11,11 @@ class CalibrationDialog : public QDialog
 {
     Q_OBJECT
 private:
-    SerialManager& serialManager;
+    SerialManager* serialManager;
+    CalibrationValueSerialized* calibration;
     bool doneLoading;
 public:
-    explicit CalibrationDialog(QWidget *parent, SerialManager& serialManager);
+    explicit CalibrationDialog(QWidget *parent, SerialManager* serialManager, CalibrationValueSerialized* calibration);
     ~CalibrationDialog();
 
 private slots:

@@ -12,7 +12,8 @@
 #include "serialmanager.h"
 #include "serialData/serialData.h"
 #include "calibrationdialog.h"
-SerialManager serialManager;
+SerialManager *serialManager = nullptr;
+CalibrationValueSerialized *calibrationData;
 int tally = 0;
 int totalWells = 0;
 
@@ -22,6 +23,12 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     ui->setupUi(this);
     ui->frame->setEnabled(false);
     connect(ui->actionWell_Layout, QOverload<bool>::of(&QAction::triggered), this, &MainWindow::on_actionTrayWell_triggered);
+    connect(serialManager, &SerialManager::calibrationDataRecieved, this, &MainWindow::calibrationDataUpdate);
+    connect(serialManager, &SerialManager::updateDataRecieved, this, &MainWindow::updateDataRecieved);
+    connect(serialManager, &SerialManager::connected, this, &MainWindow::SerialConnected);
+    connect(serialManager, &SerialManager::connectionTerminated, this, &MainWindow::SerialConnectionTerminated);
+
+    connect(ui->pushConnect, &QPushButton::clicked, this, &MainWindow::on_connectButton_clicked);
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
         qDebug() << "Name : " << info.portName();
         qDebug() << "Description : " << info.description();
@@ -32,37 +39,29 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
 MainWindow::~MainWindow()
 {
+    if(serialManager != nullptr)
+        delete serialManager;
     delete ui;
 }
 
 void MainWindow::on_startButton_clicked()
 {
-    tally = 0;
-    ui->progressBar->setValue(0);
-    StartData startData;
-    StartDataSerialized serialized;
-    startData.start_mode = 0;
-    startData.endWellIndex = ui->endWell->value();
-    startData.mills = ui->spinTimeWell->value();
-    startData.trayIndex = ui->trayCombo->currentIndex();
-    serialized.startData = startData;
-    serialManager.sendData(serialized.bytes, sizeof(startData));
+    if(serialManager != nullptr && serialManager->isConnected()){
+        tally = 0;
+        ui->progressBar->setValue(0);
+        StartData startData;
+        StartDataSerialized serialized;
+        startData.endWellIndex = ui->endWell->value();
+        startData.mills = ui->spinTimeWell->value();
+        startData.trayIndex = ui->trayCombo->currentIndex();
+        serialized.values = startData;
+        serialManager->queueCommand(QByteArray((char*)serialized.bytes));
+    }
 }
 
 void MainWindow::on_stopButton_clicked()
 {
-
-}
-
-
-void MainWindow::on_pushConnect_pressed()
-{
-    if(ui->portCombo->currentText() != ""){
-        serialManager.connectToPort(QSerialPortInfo(ui->portCombo->currentText()));
-        if(serialManager.serialConnected()){
-            ui->frame->setEnabled(true);
-        }
-    }
+    //?
 }
 
 void MainWindow::on_actionTrayWell_triggered(bool)
@@ -82,11 +81,51 @@ void MainWindow::on_refreshButton_clicked()
      }
 }
 
-
-void MainWindow::on_pushButton_clicked()
+void MainWindow::calibrationDataUpdate(CalibrationValueSerialized data)
 {
-    auto dialog = new CalibrationDialog(this, serialManager);
+    calibrationData->values = data.values;
+}
+
+void MainWindow::updateDataRecieved(updateDataSerialized data)
+{
+    //handle progress bar
+}
+
+void MainWindow::SerialConnectionTerminated(QSerialPort::SerialPortError error)
+{
+    auto dialog = new QMessageBox();
+    dialog->setText("Serial connection closed");
     dialog->exec();
-    delete dialog;
+    ui->frame->setEnabled(false);
+}
+
+void MainWindow::SerialConnected()
+{
+    auto dialog = new QMessageBox();
+    dialog->setText("Serial connection closed");
+    dialog->exec();
+    ui->frame->setEnabled(true);
+}
+
+
+void MainWindow::on_connectButton_clicked()
+{
+    qDebug() << "test";
+    if(serialManager != nullptr)
+        delete serialManager;
+    auto serialport = QSerialPortInfo(ui->portCombo->currentText());
+    serialManager = new SerialManager();
+    serialManager->connectToPort(serialport);
+}
+
+
+
+void MainWindow::on_calibrateButton_clicked()
+{
+    if(serialManager != nullptr && serialManager->isConnected()){
+        auto dialog = new CalibrationDialog(this, serialManager, calibrationData);
+        dialog->exec();
+        delete dialog;
+    }
 }
 

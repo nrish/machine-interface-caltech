@@ -6,20 +6,20 @@
 #include "serialData/serialData.h"
 #include <mutex>
 
-class SerialManager : public QThread
+class SerialManager : public QObject
 {
     Q_OBJECT
 private:
     QSerialPort sock;
     QByteArray buff;
-    SerialManager(QSerialPortInfo port);
-    void run();
-    virtual ~SerialManager();
+    bool connectionStatus;
+    bool errorState;
+    QMutex threadMutex;
+    QQueue< QByteArray > commandQueue;
 public:
-    void disconnect();
-    bool serialConnected();
-    QSerialPort& getSerialPort();
-
+    SerialManager();
+    virtual ~SerialManager();
+    int exec();
 public slots:
     /**
      * @brief dataRecieved slot triggered when data is received from port
@@ -34,12 +34,14 @@ public slots:
      * @brief onAboutToClose called when port is going to close
      */
     void onAboutToClose();
-    /**
-     * @brief sends data over serial
-     */
-    void sendData(QByteArray data);
 
-    void connected();
+    void disconnect();
+
+    void queueCommand(QByteArray data);
+
+    void connectToPort(QSerialPortInfo port);
+
+    void getSerialPort(QSerialPort& port) const;
 signals:
     /**
      * @brief calibrationDataRecieved got calibration data form arduino
@@ -52,6 +54,9 @@ signals:
      */
     void updateDataRecieved(updateDataSerialized data);
 
-    void connectionTerminated();
+    void connectionTerminated(QSerialPort::SerialPortError error);
+
+    void connected();
+
 };
 #endif // SERIALMANAGER_H

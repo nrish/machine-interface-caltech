@@ -74,66 +74,103 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <widget class="QLabel" name="label_3">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Tray Position Calibration</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QComboBox" name="traySelect">
+        <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
-          <property name="text">
-           <string>Tray #1</string>
-          </property>
+          <widget class="QComboBox" name="traySelect">
+           <item>
+            <property name="text">
+             <string>Tray #1</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Tray #2</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Tray #3</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Tray #4</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Tray #5</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Tray #6</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Tray #7</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Tray #8</string>
+            </property>
+           </item>
+          </widget>
          </item>
          <item>
-          <property name="text">
-           <string>Tray #2</string>
-          </property>
+          <widget class="QSpinBox" name="TrayX">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;X position of tray in steps&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
          </item>
          <item>
-          <property name="text">
-           <string>Tray #3</string>
-          </property>
+          <widget class="QSpinBox" name="TrayY">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Y position of tray in steps&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
          </item>
          <item>
-          <property name="text">
-           <string>Tray #4</string>
-          </property>
+          <widget class="QPushButton" name="testPos">
+           <property name="text">
+            <string>test position</string>
+           </property>
+          </widget>
          </item>
-         <item>
-          <property name="text">
-           <string>Tray #5</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Tray #6</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Tray #7</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Tray #8</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="TrayX">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;X value&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="TrayY">
-         <property name="toolTip">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Y value&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-        </widget>
+        </layout>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>General Calibration</string>
+       </property>
+      </widget>
      </item>
      <item>
       <layout class="QFormLayout" name="formLayout">
@@ -148,7 +185,11 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QSpinBox" name="wellXDist"/>
+        <widget class="QSpinBox" name="wellXDist">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;units: steps&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
        </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_2">
@@ -158,7 +199,11 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QSpinBox" name="wellYDist"/>
+        <widget class="QSpinBox" name="wellYDist">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;units: steps&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="label_6">
