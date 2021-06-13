@@ -23,7 +23,9 @@ private slots:
 
     void on_stopButton_clicked();
 
-    void on_actionTrayWell_triggered(bool);
+    void on_calibrateButton_clicked();
+
+    void on_actionWell_Layout_triggered();
 
     void on_refreshButton_clicked();
 
@@ -31,11 +33,9 @@ private slots:
 
     void updateDataRecieved(updateDataSerialized data);
 
-    void SerialConnectionTerminated(QSerialPort::SerialPortError error);
+    void SerialConnectionTerminated(QString error);
 
     void SerialConnected();
-
-    void on_calibrateButton_clicked();
 
 private:
     Ui::MainWindow *ui;

@@ -12,23 +12,20 @@
 #include "serialmanager.h"
 #include "serialData/serialData.h"
 #include "calibrationdialog.h"
-SerialManager *serialManager = nullptr;
-CalibrationValueSerialized *calibrationData;
+SerialManager serialManager;
+CalibrationValueSerialized calibrationData;
 int tally = 0;
 int totalWells = 0;
-
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
     qDebug() << sizeof(CalibrationValues);
     ui->setupUi(this);
     ui->frame->setEnabled(false);
-    connect(ui->actionWell_Layout, QOverload<bool>::of(&QAction::triggered), this, &MainWindow::on_actionTrayWell_triggered);
-    connect(serialManager, &SerialManager::calibrationDataRecieved, this, &MainWindow::calibrationDataUpdate);
-    connect(serialManager, &SerialManager::updateDataRecieved, this, &MainWindow::updateDataRecieved);
-    connect(serialManager, &SerialManager::connected, this, &MainWindow::SerialConnected);
-    connect(serialManager, &SerialManager::connectionTerminated, this, &MainWindow::SerialConnectionTerminated);
-
-    connect(ui->pushConnect, &QPushButton::clicked, this, &MainWindow::on_connectButton_clicked);
+    //connect(ui->actionWell_Layout, QOverload<bool>::of(&QAction::triggered), this, &MainWindow::on_actionTrayWell_triggered);
+    connect(&serialManager, &SerialManager::calibrationDataRecieved, this, &MainWindow::calibrationDataUpdate);
+    connect(&serialManager, &SerialManager::updateDataRecieved, this, &MainWindow::updateDataRecieved);
+    connect(&serialManager, &SerialManager::connected, this, &MainWindow::SerialConnected);
+    connect(&serialManager, &SerialManager::connectionTerminated, this, &MainWindow::SerialConnectionTerminated);
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
         qDebug() << "Name : " << info.portName();
         qDebug() << "Description : " << info.description();
@@ -39,14 +36,11 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
 MainWindow::~MainWindow()
 {
-    if(serialManager != nullptr)
-        delete serialManager;
     delete ui;
 }
 
 void MainWindow::on_startButton_clicked()
 {
-    if(serialManager != nullptr && serialManager->isConnected()){
         tally = 0;
         ui->progressBar->setValue(0);
         StartData startData;
@@ -55,20 +49,14 @@ void MainWindow::on_startButton_clicked()
         startData.mills = ui->spinTimeWell->value();
         startData.trayIndex = ui->trayCombo->currentIndex();
         serialized.values = startData;
-        serialManager->queueCommand(QByteArray((char*)serialized.bytes));
-    }
+        auto cmd = QByteArray();
+        cmd.append((char*)serialized.bytes, sizeof(StartData));
+        serialManager.sendCommand(expect(CMD_STARTDATA, false), cmd);
 }
 
 void MainWindow::on_stopButton_clicked()
 {
     //?
-}
-
-void MainWindow::on_actionTrayWell_triggered(bool)
-{
-    auto dialog = new ImageDialog(this, ":/images/96-well-temp-diagram.png", "Well Diagram");
-    dialog->exec();
-    delete dialog;
 }
 
 void MainWindow::on_refreshButton_clicked()
@@ -83,7 +71,10 @@ void MainWindow::on_refreshButton_clicked()
 
 void MainWindow::calibrationDataUpdate(CalibrationValueSerialized data)
 {
-    calibrationData->values = data.values;
+    calibrationData = data;
+    auto dialog = new CalibrationDialog(this, &serialManager, &calibrationData);
+    dialog->exec();
+    delete dialog;
 }
 
 void MainWindow::updateDataRecieved(updateDataSerialized data)
@@ -91,10 +82,10 @@ void MainWindow::updateDataRecieved(updateDataSerialized data)
     //handle progress bar
 }
 
-void MainWindow::SerialConnectionTerminated(QSerialPort::SerialPortError error)
+void MainWindow::SerialConnectionTerminated(QString error)
 {
     auto dialog = new QMessageBox();
-    dialog->setText("Serial connection closed");
+    dialog->setText("Serial connection closed: " + error);
     dialog->exec();
     ui->frame->setEnabled(false);
 }
@@ -102,7 +93,7 @@ void MainWindow::SerialConnectionTerminated(QSerialPort::SerialPortError error)
 void MainWindow::SerialConnected()
 {
     auto dialog = new QMessageBox();
-    dialog->setText("Serial connection closed");
+    dialog->setText("Serial connection opened");
     dialog->exec();
     ui->frame->setEnabled(true);
 }
@@ -110,22 +101,23 @@ void MainWindow::SerialConnected()
 
 void MainWindow::on_connectButton_clicked()
 {
-    qDebug() << "test";
-    if(serialManager != nullptr)
-        delete serialManager;
     auto serialport = QSerialPortInfo(ui->portCombo->currentText());
-    serialManager = new SerialManager();
-    serialManager->connectToPort(serialport);
+    serialManager.connectToPort(serialport);
 }
 
 
 
 void MainWindow::on_calibrateButton_clicked()
 {
-    if(serialManager != nullptr && serialManager->isConnected()){
-        auto dialog = new CalibrationDialog(this, serialManager, calibrationData);
-        dialog->exec();
-        delete dialog;
-    }
+    setPosSerialized cmd = setPos(100, 100, false, false);
+    serialManager.sendCommand(expect(CMD_SETPOS, true), QByteArray((char*)cmd.bytes, sizeof(setPos)));
+}
+
+
+void MainWindow::on_actionWell_Layout_triggered()
+{
+    auto dialog = new ImageDialog(this, ":/images/96-well-temp-diagram.png", "Well Diagram");
+    dialog->exec();
+    delete dialog;
 }
 

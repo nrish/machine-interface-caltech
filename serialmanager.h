@@ -13,13 +13,20 @@ private:
     QSerialPort sock;
     QByteArray buff;
     bool connectionStatus;
-    bool errorState;
-    QMutex threadMutex;
-    QQueue< QByteArray > commandQueue;
 public:
     SerialManager();
     virtual ~SerialManager();
-    int exec();
+    /**
+     * @brief sendRequest sends request for data
+     * @param e expect, what you expect the arduino to send. note that request value will be ignored.
+     */
+    void sendRequest(expect e);
+    /**
+     * @brief sendCommand sends command to execute
+     * @param e tells arduino what to expect, what command you are sending
+     * @param bytes bytes of command
+     */
+    void sendCommand(expect e, QByteArray bytes);
 public slots:
     /**
      * @brief dataRecieved slot triggered when data is received from port
@@ -37,11 +44,7 @@ public slots:
 
     void disconnect();
 
-    void queueCommand(QByteArray data);
-
     void connectToPort(QSerialPortInfo port);
-
-    void getSerialPort(QSerialPort& port) const;
 signals:
     /**
      * @brief calibrationDataRecieved got calibration data form arduino
@@ -54,7 +57,7 @@ signals:
      */
     void updateDataRecieved(updateDataSerialized data);
 
-    void connectionTerminated(QSerialPort::SerialPortError error);
+    void connectionTerminated(QString error);
 
     void connected();
 

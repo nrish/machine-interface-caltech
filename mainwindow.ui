@@ -20,7 +20,208 @@
    <string>Level 3 Dispenser</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout"/>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0" colspan="2">
+     <widget class="QFrame" name="frame">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QGroupBox" name="groupBoxSettings">
+         <property name="title">
+          <string>Settings</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="1" column="1">
+           <widget class="QComboBox" name="trayCombo">
+            <item>
+             <property name="text">
+              <string>Tray 1</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 2</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 3</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 4</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 5</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 6</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 7</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 8</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 9</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Tray 10</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Tray</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QSpinBox" name="endWell">
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>96</number>
+            </property>
+            <property name="value">
+             <number>96</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>End well index</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Milliseconds per well</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="uint32SpinBox" name="spinTimeWell"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxStatus">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Status</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="2" column="0">
+           <widget class="QPushButton" name="startButton">
+            <property name="text">
+             <string>Start seqence</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QPushButton" name="stopButton">
+            <property name="text">
+             <string>Stop</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QPushButton" name="calibrateButton">
+            <property name="text">
+             <string>Calibrate</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="3">
+           <widget class="QProgressBar" name="progressBar">
+            <property name="value">
+             <number>0</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="2">
+     <widget class="QGroupBox" name="groupBoxDevice">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="title">
+       <string>Device</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label_4">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Port Select</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="portCombo"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="refreshButton">
+         <property name="text">
+          <string>refresh</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="connectButton">
+         <property name="text">
+          <string>connect</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -70,6 +271,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>uint32SpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>uint32spinbox.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
