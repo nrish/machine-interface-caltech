@@ -35,11 +35,7 @@ void CalibrationDialog::on_DialogButtons_accepted()
     this->calibration->values.WELL_DIST_Y = (int16_t)ui->wellYDist->value();
     this->calibration->values.X_END_DIR = (bool)ui->xAxisDir->isChecked();
     this->calibration->values.Y_END_DIR = (bool)ui->yAxisDir->isChecked();
-    CalibrationValueSerialized serializedValues;
-    serializedValues.values = this->values;
-    auto cmd = QByteArray();
-    cmd.append(QByteArray((char*)serializedValues.bytes, sizeof(CalibrationValues)));
-    serialManager->sendCommand(expect(CMD_CALIBRATION, false), cmd);
+    serialManager->sendCommand(expect(CMD_CALIBRATION, false), calibration->bytes);
 
 }
 
@@ -65,5 +61,12 @@ void CalibrationDialog::on_TrayY_valueChanged(int i)
 void CalibrationDialog::serialStatusUpdate()
 {
 
+}
+
+
+void CalibrationDialog::on_testPos_clicked()
+{
+    setPosSerialized cmd = setPos(ui->wellXDist->value(), ui->wellYDist->value(), true, false);
+    serialManager->sendCommand(expect(CMD_SETPOS, false), cmd.bytes);
 }
 

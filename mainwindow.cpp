@@ -44,14 +44,11 @@ void MainWindow::on_startButton_clicked()
         tally = 0;
         ui->progressBar->setValue(0);
         StartData startData;
-        StartDataSerialized serialized;
         startData.endWellIndex = ui->endWell->value();
         startData.mills = ui->spinTimeWell->value();
         startData.trayIndex = ui->trayCombo->currentIndex();
-        serialized.values = startData;
-        auto cmd = QByteArray();
-        cmd.append((char*)serialized.bytes, sizeof(StartData));
-        serialManager.sendCommand(expect(CMD_STARTDATA, false), cmd);
+        StartDataSerialized serialized = startData;
+        serialManager.sendCommand(expect(CMD_STARTDATA, false), serialized.bytes);
 }
 
 void MainWindow::on_stopButton_clicked()
@@ -79,7 +76,9 @@ void MainWindow::calibrationDataUpdate(CalibrationValueSerialized data)
 
 void MainWindow::updateDataRecieved(updateDataSerialized data)
 {
-    //handle progress bar
+    auto dialog = new QMessageBox();
+    dialog->setText("calibrated");
+    dialog->exec();
 }
 
 void MainWindow::SerialConnectionTerminated(QString error)
@@ -103,14 +102,14 @@ void MainWindow::on_connectButton_clicked()
 {
     auto serialport = QSerialPortInfo(ui->portCombo->currentText());
     serialManager.connectToPort(serialport);
+    ui->connectButton->setEnabled(false);
 }
 
 
 
 void MainWindow::on_calibrateButton_clicked()
 {
-    setPosSerialized cmd = setPos(100, 100, false, false);
-    serialManager.sendCommand(expect(CMD_SETPOS, true), QByteArray((char*)cmd.bytes, sizeof(setPos)));
+    serialManager.sendRequest(expect(CMD_CALIBRATION, true));
 }
 
 

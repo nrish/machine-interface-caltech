@@ -19,11 +19,10 @@ void SerialManager::sendRequest(expect e)
     sock.flush();
 }
 
-void SerialManager::sendCommand(expect e, QByteArray bytes)
+void SerialManager::sendCommand(expect e, uint8_t* bytes)
 {
-    expectSerialized cmd = e;
-    sock.write((char*)cmd.bytes, sizeof(expect));
-    sock.write(bytes.data(), bytes.size());
+    sendRequest(e);
+    sock.write((char*)bytes, e.bytes);
     sock.flush();
 }
 
@@ -51,6 +50,7 @@ void SerialManager::disconnect()
 void SerialManager::dataRecieved(){
     buff.append(sock.readAll());
     qDebug() << "got data, bytes: " << buff.size();
+    qDebug() << QString(buff);
     while(!buff.isEmpty()){
         //we might have a command
         if(buff.size() < sizeof(expect))
@@ -61,7 +61,7 @@ void SerialManager::dataRecieved(){
         }
 
         //make sure there are enough bytes, if not wait for more data.
-        if(expectData.values.bytes > buff.size())
+        if(buff.size() < expectData.values.bytes)
             break;
         //first remove expect data
         buff.remove(0, sizeof(expect));
@@ -73,14 +73,14 @@ void SerialManager::dataRecieved(){
             } else if(expectData.values.cmd == CMD_CALIBRATION){
                 CalibrationValueSerialized calData;
                 for(uint32_t i = 0; i < sizeof(CalibrationValues); i++){
-                    expectData.bytes[i] = buff.data()[i];
+                    calData.bytes[i] = buff.data()[i];
                 }
                 emit calibrationDataRecieved(calData);
             } else if( expectData.values.cmd == CMD_UPDATE){
                 //emit update!
                 updateDataSerialized upData;
-                for(uint32_t i = 0; i < sizeof(upData); i++){
-                    expectData.bytes[i] = buff.data()[i];
+                for(uint32_t i = 0; i < sizeof(updateData); i++){
+                    upData.bytes[i] = buff.data()[i];
                 }
                 //effectively const
                 emit updateDataRecieved(upData);
@@ -107,6 +107,6 @@ void SerialManager::onError(QSerialPort::SerialPortError error){
 
 void SerialManager::onAboutToClose()
 {
-    //?
+   emit connectionTerminated("");
 }
 

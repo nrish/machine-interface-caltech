@@ -26,7 +26,7 @@ public:
      * @param e tells arduino what to expect, what command you are sending
      * @param bytes bytes of command
      */
-    void sendCommand(expect e, QByteArray bytes);
+    void sendCommand(expect e, uint8_t* bytes);
 public slots:
     /**
      * @brief dataRecieved slot triggered when data is received from port

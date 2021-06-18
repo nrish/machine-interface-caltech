@@ -28,6 +28,8 @@ private slots:
     void on_TrayY_valueChanged(int i);
 
     void serialStatusUpdate();
+    void on_testPos_clicked();
+
 private:
     CalibrationValues values;
     Ui::CalibrationDialog *ui;
