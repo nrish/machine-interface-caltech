@@ -13,8 +13,8 @@ private:
     QSerialPort sock;
     QByteArray buff;
     bool connectionStatus;
-    void readPacketStream(QByteArray arry);
-    void writePacketStream(QByteArray arry);
+    void readPacketStream(QByteArray &arry);
+    void writePacketStream(char *bytes, size_t len);
 public:
     SerialManager();
     virtual ~SerialManager();
@@ -43,8 +43,6 @@ public slots:
      * @brief onAboutToClose called when port is going to close
      */
     void onAboutToClose();
-
-    void disconnect();
 
     void connectToPort(QSerialPortInfo port);
 signals:

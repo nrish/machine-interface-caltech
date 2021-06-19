@@ -22,7 +22,7 @@ void SerialManager::sendRequest(expect e)
 void SerialManager::sendCommand(expect e, uint8_t* bytes)
 {
     sendRequest(e);
-    sock.write((char*)bytes, e.bytes);
+    this->writePacketStream((char*)bytes, e.bytes);
     sock.flush();
 }
 
@@ -42,40 +42,34 @@ void SerialManager::connectToPort(QSerialPortInfo port)
     }
 }
 
-void SerialManager::writePacketStream(QByteArray arry){
-  //get number of packets needed to send data plus one if it doesn't fit evenly
-  int packets = arry.size()/16 + arry.size()%16;
-  for(int i = 0; i < packets; i++){
-    //copy 16 byte chunks and write
-    sock.write((arry.data()+i*16), 16);
-    //wait for confirm bit
-    sock.waitForReadyRead();
-    //read single confirm bit
-    sock.read(null,0);
-  }
-}
-void SerialManager::readPacketStream(QByteArray arry){
+void SerialManager::writePacketStream(char* bytes, size_t len){
+    //get number of packets needed to send data plus one if it doesn't fit evenly
+    char conf = 0;
 
-  int packets = len/16 + len%16;
-  char sig = 1;
-  for(int i = 0; i < packets; i++){
-    //read 16 byte chunk
-    sock.read((packet+i*16), 16);
-    //write confirm bit
-    sock.write(&sig, 1);
-  }
+    int packets = len/16 + len%16;
+    for(int i = 0; i < packets; i++){
+        //copy 16 byte chunks and write
+        sock.write((bytes+i*16), 16);
+        //wait for confirm bit
+        sock.waitForReadyRead();
+        //read single confirm bit
+        sock.read(&conf,1);
+    }
+}
+void SerialManager::readPacketStream(QByteArray &arry){
+    char packet[16];
+    int packets = arry.size()/16 + arry.size()%16;
+    char sig = 1;
+    for(int i = 0; i < packets; i++){
+        //read 16 byte chunk
+        sock.read((packet+i*16), 16);
+        //add to buff
+        arry.append(packet, 16);
+        //write confirm bit
+        sock.write(&sig, 1);
+    }
 }
 void SerialManager::dataRecieved(){
-    char first;
-    sock.peek(&first, 1);
-    if(first == '<'){
-        //do stuff
-        sock.AllDirections
-    }else{
-        //clear everything, something is wrong if we
-        sock.readAll();
-    }
-
     buff.append(sock.readAll());
     qDebug() << "got data, bytes: " << buff.size();
     qDebug() << QString(buff);
@@ -135,6 +129,6 @@ void SerialManager::onError(QSerialPort::SerialPortError error){
 
 void SerialManager::onAboutToClose()
 {
-   emit connectionTerminated("");
+    emit connectionTerminated("");
 }
 
