@@ -3,6 +3,8 @@
 #include <QObject>
 #include <stdint.h>
 #include <string>
+#include <QSpinBox>
+
 CalibrationDialog::CalibrationDialog(QWidget *parent, SerialManager* serialManager, CalibrationValueSerialized *calibration) :
     QDialog(parent),
     ui(new Ui::CalibrationDialog)
@@ -13,8 +15,8 @@ CalibrationDialog::CalibrationDialog(QWidget *parent, SerialManager* serialManag
         qDebug() << calibration->values.trays[i].x << " " << calibration->values.trays[i].y;
     ui->setupUi(this);
     ui->frame->setDisabled(true);
-    ui->TrayX->setRange(0,5000);
-    ui->TrayY->setRange(0,5000);
+    ui->TrayX->setRange(0, INT_MAX);
+    ui->TrayY->setRange(0, INT_MAX);
     ui->wellXDist->setRange(0, 5000);
     ui->wellYDist->setRange(0, 5000);
     ui->wellXDist->setValue(this->calibration->values.WELL_DIST_X);
@@ -26,7 +28,6 @@ CalibrationDialog::CalibrationDialog(QWidget *parent, SerialManager* serialManag
     ui->TrayY->setValue(targetTray->y);
     ui->frame->setEnabled(true);
 }
-
 CalibrationDialog::~CalibrationDialog()
 {
     delete ui;
@@ -75,19 +76,12 @@ void CalibrationDialog::serialStatusUpdate()
 
 void CalibrationDialog::on_testPos_clicked()
 {
-    setPosSerialized cmd = setPos(ui->wellXDist->value(), ui->wellYDist->value(), true, false);
+    setPosSerialized cmd = setPos(targetTray->x, targetTray->y, true, false);
     serialManager->sendCommand(expect(CMD_SETPOS, false), cmd.bytes);
 }
 
 
 void CalibrationDialog::on_homeButton_clicked()
-{
-    setPosSerialized cmd = setPos(0, 0, false, true);
-    serialManager->sendCommand(expect(CMD_SETPOS, false), cmd.bytes);
-}
-
-
-void CalibrationDialog::on_homeButton_pressed()
 {
     setPosSerialized cmd = setPos(0, 0, false, true);
     serialManager->sendCommand(expect(CMD_SETPOS, false), cmd.bytes);

@@ -125,7 +125,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="uint32SpinBox" name="spinTimeWell"/>
+           <widget class="QSpinBox" name="spinTimeWell"/>
           </item>
          </layout>
         </widget>
@@ -271,13 +271,6 @@
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>uint32SpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>uint32spinbox.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

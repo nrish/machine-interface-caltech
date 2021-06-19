@@ -245,16 +245,6 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QUndoView" name="undoView">
-   <property name="geometry">
-    <rect>
-     <x>70</x>
-     <y>420</y>
-     <width>256</width>
-     <height>192</height>
-    </rect>
-   </property>
-  </widget>
  </widget>
  <resources/>
  <connections>

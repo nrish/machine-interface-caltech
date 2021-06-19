@@ -6,8 +6,7 @@ uint32SpinBox::uint32SpinBox(QWidget *parent): QAbstractSpinBox(parent)
 {
     QRegExp rx("\\d+");
     this->validator = new QRegExpValidator(rx);
-
-    val = 2000;
+    this->val = 0;
     updateText();
 }
 
@@ -16,6 +15,10 @@ bool uint32SpinBox::isInRange(int steps) const
     long result1 = this->val + steps;
     long result2 = this->val + steps;
     return result1 <= UINT32_MAX && result2 >= 0;
+}
+void uint32SpinBox::setValue(uint32_t value){
+    this->val = value;
+    updateText();
 }
 
 void uint32SpinBox::updateText()
@@ -28,6 +31,7 @@ void uint32SpinBox::stepBy(int steps)
     if(isInRange(steps)) val += steps;
     updateText();
 }
+
 
 QAbstractSpinBox::StepEnabled uint32SpinBox::stepEnabled() const
 {
@@ -55,7 +59,6 @@ QValidator::State uint32SpinBox::validate(QString &input, int &pos) const
         long difference = UINT32_MAX - value;
 
         qDebug() << "difference: " << difference;
-
         if(difference < 0) {
             return QValidator::Invalid;
         }else if(difference >= 0){

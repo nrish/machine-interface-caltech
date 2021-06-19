@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     connect(&serialManager, &SerialManager::updateDataRecieved, this, &MainWindow::updateDataRecieved);
     connect(&serialManager, &SerialManager::connected, this, &MainWindow::SerialConnected);
     connect(&serialManager, &SerialManager::connectionTerminated, this, &MainWindow::SerialConnectionTerminated);
+    ui->spinTimeWell->setRange(0, INT_MAX);
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
         qDebug() << "Name : " << info.portName();
         qDebug() << "Description : " << info.description();
@@ -58,6 +59,7 @@ void MainWindow::on_startButton_clicked()
         startData.mills = ui->spinTimeWell->value();
         startData.trayIndex = ui->trayCombo->currentIndex();
         StartDataSerialized serialized = startData;
+        qDebug() << startData.mills;
         serialManager.sendCommand(expect(CMD_STARTDATA, false), serialized.bytes);
 }
 
