@@ -13,7 +13,7 @@ private:
     QSerialPort sock;
     QByteArray buff;
     bool connectionStatus;
-    void readPacketStream(QByteArray &arry);
+    void readPacketStream(QByteArray &arry, size_t len);
     void writePacketStream(char *bytes, size_t len);
 public:
     SerialManager();

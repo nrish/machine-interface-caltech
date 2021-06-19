@@ -151,7 +151,14 @@
          <item>
           <widget class="QPushButton" name="testPos">
            <property name="text">
-            <string>test position</string>
+            <string>Test Position</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="homeButton">
+           <property name="text">
+            <string>Home</string>
            </property>
           </widget>
          </item>
@@ -237,6 +244,16 @@
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QUndoView" name="undoView">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>420</y>
+     <width>256</width>
+     <height>192</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources/>

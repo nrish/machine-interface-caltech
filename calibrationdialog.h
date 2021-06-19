@@ -12,6 +12,7 @@ class CalibrationDialog : public QDialog
     Q_OBJECT
 private:
     SerialManager* serialManager;
+    Tray* targetTray;
     CalibrationValueSerialized* calibration;
     bool doneLoading;
 public:
@@ -29,6 +30,8 @@ private slots:
 
     void serialStatusUpdate();
     void on_testPos_clicked();
+
+    void on_homeButton_clicked();
 
 private:
     CalibrationValues values;

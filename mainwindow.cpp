@@ -18,6 +18,16 @@ int tally = 0;
 int totalWells = 0;
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
+    //tsting
+    CalibrationValueSerialized data;
+    data.values.trays[1].x = 1123;
+    qDebug() << data.values.trays[1].x;
+
+    data.values.trays[3].x = 123;
+    qDebug() << data.values.trays[3].x;
+
+    data.values.trays[4].x = 992;
+    qDebug() << data.values.trays[4].x;
     qDebug() << sizeof(CalibrationValues);
     ui->setupUi(this);
     ui->frame->setEnabled(false);
@@ -86,6 +96,7 @@ void MainWindow::SerialConnectionTerminated(QString error)
     auto dialog = new QMessageBox();
     dialog->setText("Serial connection closed: " + error);
     dialog->exec();
+    ui->connectButton->setEnabled(true);
     ui->frame->setEnabled(false);
 }
 

@@ -45,48 +45,43 @@ void SerialManager::connectToPort(QSerialPortInfo port)
 void SerialManager::writePacketStream(char* bytes, size_t len){
     //get number of packets needed to send data plus one if it doesn't fit evenly
     char conf = 0;
-
-    int packets = len/16 + len%16;
+    qDebug() << "writing";
+    int packets = len/16 + (len%16 == 0 ? 0 : 1);
     for(int i = 0; i < packets; i++){
         //copy 16 byte chunks and write
         sock.write((bytes+i*16), 16);
+        sock.flush();
         //wait for confirm bit
         sock.waitForReadyRead();
-        //read single confirm bit
-        sock.read(&conf,1);
+        sock.skip(1);
     }
+    qDebug() << "writing";
 }
-void SerialManager::readPacketStream(QByteArray &arry){
+void SerialManager::readPacketStream(QByteArray &arry, size_t len){
     char packet[16];
-    int packets = arry.size()/16 + arry.size()%16;
-    char sig = 1;
+    int packets = len/16 + (len%16 == 0 ? 0 : 1);
+//    char sig = 1;
     for(int i = 0; i < packets; i++){
         //read 16 byte chunk
-        sock.read((packet+i*16), 16);
-        //add to buff
+        sock.read(packet, 16);
         arry.append(packet, 16);
-        //write confirm bit
-        sock.write(&sig, 1);
+//        //write confirm bit
+//        qDebug() << "waiting for recieve";
+//        sock.write(&sig, 1);
     }
 }
 void SerialManager::dataRecieved(){
-    buff.append(sock.readAll());
-    qDebug() << "got data, bytes: " << buff.size();
-    qDebug() << QString(buff);
-    while(!buff.isEmpty()){
-        //we might have a command
-        if(buff.size() < sizeof(expect))
-            break;
-        expectSerialized expectData;
-        for(uint32_t i = 0; i < sizeof(expect); i++){
-            expectData.bytes[i] = buff.data()[i];
-        }
-
-        //make sure there are enough bytes, if not wait for more data.
-        if(buff.size() < expectData.values.bytes)
-            break;
-        //first remove expect data
-        buff.remove(0, sizeof(expect));
+//    buff.append(sock.readAll());
+//    qDebug() << "got data, bytes: " << buff.size();
+//    qDebug() << QString(buff);
+    qDebug() << "got " << sock.bytesAvailable();
+    expectSerialized expectData;
+    int len = sock.peek((char*)expectData.bytes, sizeof(expect));
+    if(len >= sizeof(expect) && sock.bytesAvailable() >= expectData.values.bytes+sizeof(expect)){
+        sock.skip(sizeof(expect));
+        QByteArray arry;
+        readPacketStream(arry, expectData.values.bytes);
+        qDebug() << "arry size (cal): " << arry.size();
         if(expectData.values.request){
             //nothing to really do here yet.
         }else{
@@ -94,27 +89,26 @@ void SerialManager::dataRecieved(){
                 //not expecting this
             } else if(expectData.values.cmd == CMD_CALIBRATION){
                 CalibrationValueSerialized calData;
-                for(uint32_t i = 0; i < sizeof(CalibrationValues); i++){
-                    calData.bytes[i] = buff.data()[i];
-                }
+                memcpy(calData.bytes, arry.data(), sizeof(CalibrationValues));
                 emit calibrationDataRecieved(calData);
             } else if( expectData.values.cmd == CMD_UPDATE){
-                //emit update!
+                QByteArray arry;
                 updateDataSerialized upData;
-                for(uint32_t i = 0; i < sizeof(updateData); i++){
-                    upData.bytes[i] = buff.data()[i];
-                }
-                //effectively const
+                memcpy(upData.bytes, arry.data(), sizeof(updateData));
                 emit updateDataRecieved(upData);
 
             }else if(expectData.values.cmd == CMD_SETPOS){
                 //nothing to do
 
+            }else if(expectData.values.cmd == DEBUG_MSG){
+                qDebug() << "got debug msg";
+                qDebug() << QString::fromUtf8(arry).toUtf8();
+
             }else{
                 //unknown command
             }
         }
-        buff.remove(0,expectData.values.bytes);
+        sock.readAll();
     }
 }
 
@@ -123,6 +117,7 @@ void SerialManager::onError(QSerialPort::SerialPortError error){
     if(error == QSerialPort::SerialPortError::NoError){
         //shouldn't be here?
     }else {
+        this->sock.close();
         emit connectionTerminated(sock.errorString());
     }
 }
