@@ -42,12 +42,40 @@ void SerialManager::connectToPort(QSerialPortInfo port)
     }
 }
 
-void SerialManager::disconnect()
-{
-    this->sock.disconnect();
+void SerialManager::writePacketStream(QByteArray arry){
+  //get number of packets needed to send data plus one if it doesn't fit evenly
+  int packets = arry.size()/16 + arry.size()%16;
+  for(int i = 0; i < packets; i++){
+    //copy 16 byte chunks and write
+    sock.write((arry.data()+i*16), 16);
+    //wait for confirm bit
+    sock.waitForReadyRead();
+    //read single confirm bit
+    sock.read(null,0);
+  }
 }
+void SerialManager::readPacketStream(QByteArray arry){
 
+  int packets = len/16 + len%16;
+  char sig = 1;
+  for(int i = 0; i < packets; i++){
+    //read 16 byte chunk
+    sock.read((packet+i*16), 16);
+    //write confirm bit
+    sock.write(&sig, 1);
+  }
+}
 void SerialManager::dataRecieved(){
+    char first;
+    sock.peek(&first, 1);
+    if(first == '<'){
+        //do stuff
+        sock.AllDirections
+    }else{
+        //clear everything, something is wrong if we
+        sock.readAll();
+    }
+
     buff.append(sock.readAll());
     qDebug() << "got data, bytes: " << buff.size();
     qDebug() << QString(buff);
