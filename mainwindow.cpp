@@ -12,12 +12,14 @@
 #include "serialmanager.h"
 #include "serialData/serialData.h"
 #include "calibrationdialog.h"
+#include "version_config.h"
 SerialManager serialManager;
 CalibrationValueSerialized calibrationData;
 int tally = 0;
 int totalWells = 0;
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
+    this->setWindowTitle(QString("Level 3 Dispenser v%1").arg(PROJECT_VERSION_STRING));
     //tsting
     CalibrationValueSerialized data;
     data.values.trays[1].x = 1123;

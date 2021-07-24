@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(machinegui VERSION 1.3.0 LANGUAGES CXX)
+project(machinegui VERSION 0.3.0 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
