@@ -63,7 +63,7 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/bundle
 )
 
-if(BUNDLE)
+if(GENERATE_BUNDLE)
     include(cmake/DeployQt.cmake)
     # At this point, we grab the dependencies of the program. This is handled by different "deployers"
     if(WIN32)
