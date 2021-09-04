@@ -1,8 +1,8 @@
 #ifndef CALIBRATIONDIALOG_H
 #define CALIBRATIONDIALOG_H
-#include "serialData/serialData.h"
+#include "calibrationvalues.h"
 #include <QDialog>
-#include "serialmanager.h"
+#include "deviceManager.h"
 namespace Ui {
 class CalibrationDialog;
 }
@@ -11,12 +11,10 @@ class CalibrationDialog : public QDialog
 {
     Q_OBJECT
 private:
-    SerialManager* serialManager;
-    Tray* targetTray;
-    CalibrationValueSerialized* calibration;
+    DeviceManager* deviceManager;
     bool doneLoading;
 public:
-    explicit CalibrationDialog(QWidget *parent, SerialManager* serialManager, CalibrationValueSerialized* calibration);
+    explicit CalibrationDialog(QWidget *parent, DeviceManager* serialManager);
     ~CalibrationDialog();
 
 private slots:

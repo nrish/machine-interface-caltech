@@ -10,18 +10,19 @@ CONFIG += c++11 static console
 
 SOURCES += \
     calibrationdialog.cpp \
+    calibrationvalues.cpp \
+    deviceManager.cpp \
     imagedialog.cpp \
     main.cpp \
     mainwindow.cpp \
-    serialmanager.cpp \
     uint32spinbox.cpp
 
 HEADERS += \
     calibrationdialog.h \
+    calibrationvalues.h \
+    deviceManager.h \
     imagedialog.h \
     mainwindow.h \
-    serialData/serialData.h \
-    serialmanager.h \
     uint32spinbox.h \
     serialData.h
 

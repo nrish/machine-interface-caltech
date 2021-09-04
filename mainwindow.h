@@ -1,6 +1,5 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "serialData/serialData.h"
 #include <QMainWindow>
 #include <QSerialPort>
 
@@ -21,17 +20,13 @@ private slots:
 
     void on_startButton_clicked();
 
-    void on_stopButton_clicked();
-
     void on_calibrateButton_clicked();
 
     void on_actionWell_Layout_triggered();
 
     void on_refreshButton_clicked();
 
-    void calibrationDataUpdate(CalibrationValueSerialized data);
-
-    void updateDataRecieved(updateDataSerialized data);
+    void on_calibration_recieve();
 
     void SerialConnectionTerminated(QString error);
 

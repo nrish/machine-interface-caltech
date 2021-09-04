@@ -5,27 +5,21 @@
 #include <string>
 #include <QSpinBox>
 
-CalibrationDialog::CalibrationDialog(QWidget *parent, SerialManager* serialManager, CalibrationValueSerialized *calibration) :
+CalibrationDialog::CalibrationDialog(QWidget *parent, DeviceManager* deviceManager) :
     QDialog(parent),
     ui(new Ui::CalibrationDialog)
 {
-    this->serialManager = serialManager;
-    this->calibration = calibration;
-    for(int i = 0; i < 8; i++)
-        qDebug() << calibration->values.trays[i].x << " " << calibration->values.trays[i].y;
+    this->deviceManager = deviceManager;
     ui->setupUi(this);
     ui->frame->setDisabled(true);
     ui->TrayX->setRange(0, INT_MAX);
     ui->TrayY->setRange(0, INT_MAX);
     ui->wellXDist->setRange(0, 5000);
     ui->wellYDist->setRange(0, 5000);
-    ui->wellXDist->setValue(this->calibration->values.WELL_DIST_X);
-    ui->wellYDist->setValue(this->calibration->values.WELL_DIST_Y);
-    ui->xAxisDir->setChecked(this->calibration->values.X_END_DIR);
-    ui->yAxisDir->setChecked(this->calibration->values.Y_END_DIR);
-    targetTray = &calibration->values.trays[0];
-    ui->TrayX->setValue(targetTray->x);
-    ui->TrayY->setValue(targetTray->y);
+    ui->wellXDist->setValue(deviceManager->getCalibrationValues().getWellDistX());
+    ui->wellYDist->setValue(deviceManager->getCalibrationValues().getWellDistY());
+    ui->xAxisDir->setChecked(deviceManager->getCalibrationValues().getXAxisDir());
+    ui->yAxisDir->setChecked(deviceManager->getCalibrationValues().getYAxisDir());
     ui->frame->setEnabled(true);
 }
 CalibrationDialog::~CalibrationDialog()
@@ -35,37 +29,35 @@ CalibrationDialog::~CalibrationDialog()
 
 void CalibrationDialog::on_DialogButtons_accepted()
 {
-    this->calibration->values.WELL_DIST_X = (int16_t)ui->wellXDist->value();
-    this->calibration->values.WELL_DIST_Y = (int16_t)ui->wellYDist->value();
-    this->calibration->values.X_END_DIR = (bool)ui->xAxisDir->isChecked();
-    this->calibration->values.Y_END_DIR = (bool)ui->yAxisDir->isChecked();
-    serialManager->sendCommand(expect(CMD_CALIBRATION, false), calibration->bytes);
-
+    deviceManager->getCalibrationValues().setWellDistX(ui->wellXDist->value());
+    deviceManager->getCalibrationValues().setWellDistY(ui->wellYDist->value());
+    deviceManager->getCalibrationValues().setXAxisDir(ui->xAxisDir->isChecked());
+    deviceManager->getCalibrationValues().setYAxisDir(ui->yAxisDir->isChecked());
+    CalibrationValues & values = deviceManager->getCalibrationValues();
+    deviceManager->setDistCalibration(values.well_dist_x, values.well_dist_y, values.x_axis_dir, values.y_axis_dir);
+    for(int i = 0; i < 8; i++)
+        deviceManager->setTrayCalibration(i, values.getTray(i).xpos, values.getTray(i).ypos);
+    deviceManager->confirmCalibration();
 }
 
 
 void CalibrationDialog::on_traySelect_currentIndexChanged(int index)
 {
     qDebug() << index;
-    this->targetTray = &calibration->values.trays[index];
-    ui->TrayX->setValue(targetTray->x);
-    ui->TrayY->setValue(targetTray->y);
+    ui->TrayX->setValue(deviceManager->getCalibrationValues().getTray(index).xpos);
+    ui->TrayY->setValue(deviceManager->getCalibrationValues().getTray(index).ypos);
 }
 
 
 void CalibrationDialog::on_TrayX_valueChanged(int i)
 {
-    qDebug() << ui->traySelect->currentIndex();
-    targetTray->x = i;
-    qDebug() << this->calibration->values.trays[ui->traySelect->currentIndex()].x;
+    deviceManager->getCalibrationValues().getTray(ui->traySelect->currentIndex()).xpos = i;
 }
 
 
 void CalibrationDialog::on_TrayY_valueChanged(int i)
 {
-    qDebug() << ui->traySelect->currentIndex();
-    targetTray->y = i;
-    qDebug() << this->calibration->values.trays[ui->traySelect->currentIndex()].y;
+    deviceManager->getCalibrationValues().getTray(ui->traySelect->currentIndex()).ypos = i;
 }
 
 void CalibrationDialog::serialStatusUpdate()
@@ -76,14 +68,13 @@ void CalibrationDialog::serialStatusUpdate()
 
 void CalibrationDialog::on_testPos_clicked()
 {
-    setPosSerialized cmd = setPos(targetTray->x, targetTray->y, true, false);
-    serialManager->sendCommand(expect(CMD_SETPOS, false), cmd.bytes);
+    auto currentTray = deviceManager->getCalibrationValues().getTray(ui->traySelect->currentIndex());
+    deviceManager->setPos(currentTray.xpos, currentTray.ypos);
 }
 
 
 void CalibrationDialog::on_homeButton_clicked()
 {
-    setPosSerialized cmd = setPos(0, 0, false, true);
-    serialManager->sendCommand(expect(CMD_SETPOS, false), cmd.bytes);
+    deviceManager->home();
 }
 
