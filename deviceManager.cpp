@@ -46,7 +46,7 @@ void DeviceManager::setPos(uint16_t x, uint16_t y)
 void DeviceManager::home()
 {
     QByteArray data;
-    data.append((byte)0);
+    data.append((char)0);
     data.append(id_home);
     sendCommand(data);
 }
