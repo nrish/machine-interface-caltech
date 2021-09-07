@@ -17,7 +17,8 @@ DeviceManager deviceManager;
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->frame->setEnabled(false);
+    ui->groupBoxSettings->setEnabled(false);
+    ui->groupBoxStatus->setEnabled(false);
     connect(&deviceManager, &DeviceManager::connected, this, &MainWindow::SerialConnected);
     connect(&deviceManager, &DeviceManager::connectionTerminated, this, &MainWindow::SerialConnectionTerminated);
     connect(&deviceManager, &DeviceManager::calibrationDataRecieved, this, &MainWindow::on_calibration_recieve);
@@ -37,9 +38,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_startButton_clicked()
 {
-    for(int i = 0; i < 8; i++){
-        deviceManager.setTrayCalibration(i, 0, 0);
-    }
     deviceManager.clearTrays();
     for(int i = 0; i < ui->trayList->count(); i++){
         TraySequenceItem* item = (TraySequenceItem*)ui->trayList->item(i);
@@ -75,12 +73,14 @@ void MainWindow::SerialConnectionTerminated(QString error)
         dialog->setText("Serial connection closed.");
     dialog->exec();
     delete dialog;
-    ui->frame->setEnabled(false);
+    ui->groupBoxSettings->setEnabled(false);
+    ui->groupBoxStatus->setEnabled(false);
 }
 
 void MainWindow::SerialConnected()
 {
-    ui->frame->setEnabled(true);
+    ui->groupBoxSettings->setEnabled(true);
+    ui->groupBoxStatus->setEnabled(true);
     ui->trayList->clear();
 }
 
@@ -114,7 +114,8 @@ void MainWindow::on_tray_add_clicked()
 
 void MainWindow::newTraySequence(int time, int startwell, int endwell, int index)
 {
-
+    if(startwell > endwell)
+        QMessageBox::information(this, "Invalid tray configuration", "Invalid tray configuration, first well must be before last well");
     for(int i = 0; i < ui->trayList->count(); i++){
         if(((TraySequenceItem*)ui->trayList->item(i))->getIndex() == index){
             auto keepTray = QMessageBox::question(this, "Tray In Use","Tray already in use, replace old tray?", QMessageBox::Yes | QMessageBox::No);

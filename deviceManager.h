@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <mutex>
 #include "calibrationvalues.h"
-
+typedef unsigned char byte;
 
 const unsigned char id_printTestInfo = 0;
 const unsigned char id_setPos = 1;
@@ -24,10 +24,13 @@ const unsigned char id_calibrationDataResponse = 51;
 class DeviceManager : public QObject
 {
     Q_OBJECT
-protected:
+private:
     QSerialPort sock;
     QByteArray buff;
     CalibrationValues deviceCalibration;
+    QList<QByteArray> pendingCommands;
+    void sendCommand(QByteArray arry);
+    bool isReadySend = true;
 public:
     DeviceManager();
     virtual ~DeviceManager();
@@ -53,6 +56,8 @@ public:
     void confirmCalibration();
 
     void getCalibrationData();
+
+    QSerialPort& getSerialPort();
 
     CalibrationValues& getCalibrationValues();
     /**
