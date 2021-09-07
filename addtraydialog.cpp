@@ -13,7 +13,7 @@ addTrayDialog::addTrayDialog(MainWindow* window) :
     ui->timeSpinbox->setRange(0, INT_MAX);
 
     for(int i = 0; i < 8; i++){
-        ui->comboBox->addItem(QString::asprintf("Tray #%i", i));
+        ui->comboBox->addItem(QString::asprintf("Tray #%i", i+1));
     }
     connect(this, &addTrayDialog::newTraySequence, this->mainWindow, &MainWindow::newTraySequence);
 }

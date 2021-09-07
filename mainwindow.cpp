@@ -41,6 +41,7 @@ void MainWindow::on_startButton_clicked()
         qDebug() << "sending tray item #" << i;
         deviceManager.addTray(item->getIndex(), item->getTime(), item->getStartWell(), item->getEndWell());
     }
+    deviceManager.start();
 }
 
 void MainWindow::on_refreshButton_clicked()
@@ -56,6 +57,7 @@ void MainWindow::on_refreshButton_clicked()
 void MainWindow::on_calibration_recieve()
 {
     calibrationDialog->show();
+    calibrationDialog->refresh();
 }
 
 
@@ -114,6 +116,7 @@ void MainWindow::newTraySequence(int time, int startwell, int endwell, int index
     }
     auto item = new TraySequenceItem(time, startwell, endwell, index);
     ui->trayList->addItem(item);
+
 }
 
 

@@ -22,6 +22,15 @@ CalibrationDialog::CalibrationDialog(QWidget *parent, DeviceManager* deviceManag
     ui->yAxisDir->setChecked(deviceManager->getCalibrationValues().getYAxisDir());
     ui->frame->setEnabled(true);
 }
+void CalibrationDialog::refresh(){
+    ui->wellXDist->setValue(deviceManager->getCalibrationValues().getWellDistX());
+    ui->wellYDist->setValue(deviceManager->getCalibrationValues().getWellDistY());
+    ui->xAxisDir->setChecked(deviceManager->getCalibrationValues().getXAxisDir());
+    ui->yAxisDir->setChecked(deviceManager->getCalibrationValues().getYAxisDir());
+    ui->TrayX->setValue(deviceManager->getCalibrationValues().getTray(ui->traySelect->currentIndex()).xpos);
+    ui->TrayY->setValue(deviceManager->getCalibrationValues().getTray(ui->traySelect->currentIndex()).ypos);
+}
+
 CalibrationDialog::~CalibrationDialog()
 {
     delete ui;
@@ -58,11 +67,6 @@ void CalibrationDialog::on_TrayX_valueChanged(int i)
 void CalibrationDialog::on_TrayY_valueChanged(int i)
 {
     deviceManager->getCalibrationValues().getTray(ui->traySelect->currentIndex()).ypos = i;
-}
-
-void CalibrationDialog::serialStatusUpdate()
-{
-
 }
 
 

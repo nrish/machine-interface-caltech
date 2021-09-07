@@ -6,7 +6,7 @@ TraySequenceItem::TraySequenceItem(int time, int startwell, int endwell, int ind
     this->startWell = startwell;
     this->endWell = endwell;
     this->index = index;
-    this->setText(QString::asprintf("Tray #%i, wells %i to %i @ %i ms each", index, startWell, endWell, time));
+    this->setText(QString::asprintf("Tray #%i, wells %i to %i @ %i ms each", index+1, startWell, endWell, time));
 }
 
 int TraySequenceItem::getTime() const
@@ -16,12 +16,12 @@ int TraySequenceItem::getTime() const
 
 int TraySequenceItem::getStartWell() const
 {
-    return endWell;
+    return startWell;
 }
 
 int TraySequenceItem::getEndWell() const
 {
-    return startWell;
+    return endWell;
 }
 
 int TraySequenceItem::getIndex() const

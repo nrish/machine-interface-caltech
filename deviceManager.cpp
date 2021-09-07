@@ -167,7 +167,7 @@ void DeviceManager::connectToPort(QSerialPortInfo port)
 void DeviceManager::dataRecieved(){
     qDebug() << "got bytes";
     qDebug() << QString(sock.peek(sock.bytesAvailable()).toHex());
-    if(sock.bytesAvailable() >= 2){
+    while(sock.bytesAvailable() >= 2){
         //there is data available
         uint16_t data;
         char* ptr = (char*)(&data);
@@ -208,13 +208,11 @@ void DeviceManager::dataRecieved(){
 }
 
 void DeviceManager::onError(QSerialPort::SerialPortError error){
-    //?
-    if(error == QSerialPort::SerialPortError::NoError){
-        //shouldn't be here?
-    } else {
+    if(!(error == QSerialPort::SerialPortError::NoError || error == QSerialPort::UnknownError)){
         if(this->sock.isOpen()){
             emit connectionTerminated(sock.errorString());
             sock.close();
+            sock.clearError();
         }
     }
 }

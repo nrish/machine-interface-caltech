@@ -15,6 +15,7 @@ private:
     bool doneLoading;
 public:
     explicit CalibrationDialog(QWidget *parent, DeviceManager* serialManager);
+    void refresh();
     ~CalibrationDialog();
 
 private slots:
@@ -26,7 +27,6 @@ private slots:
 
     void on_TrayY_valueChanged(int i);
 
-    void serialStatusUpdate();
     void on_testPos_clicked();
 
     void on_homeButton_clicked();
