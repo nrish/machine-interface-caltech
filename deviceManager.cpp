@@ -10,7 +10,6 @@ DeviceManager::DeviceManager()
     connect(&this->sock, &QSerialPort::errorOccurred, this, &DeviceManager::onError);
 }
 DeviceManager::~DeviceManager(){
-    this->connectionStatus = false;
 }
 
 void DeviceManager::printTestInfo()
@@ -38,7 +37,7 @@ void DeviceManager::home()
     data.append(id_home);
     sock.write(data);
 }
-//windows pass 1600
+
 void DeviceManager::addTray(uint8_t index, uint16_t time, uint8_t start, uint8_t end)
 {
     QByteArray data;
@@ -95,8 +94,9 @@ void DeviceManager::setTrayCalibration(uint8_t index, uint16_t x, uint16_t y)
     data.append(5);
     data.append(id_setTrayCalibration);
     data.append(index);
-    data.append(qToLittleEndian(x));
-    data.append(qToLittleEndian(y));
+    data.append(x);
+    data.append(y);
+    sock.write(data);
 }
 
 void DeviceManager::confirmCalibration()
@@ -122,15 +122,15 @@ CalibrationValues &DeviceManager::getCalibrationValues()
 
 void DeviceManager::connectToPort(QSerialPortInfo port)
 {
-    if(this->connectionStatus){
-        this->sock.close();
-    }
+    if(sock.isOpen())
+        sock.close();
     sock.setPort(port);
     sock.setParity(QSerialPort::NoParity);
     sock.setStopBits(QSerialPort::OneStop);
     sock.setFlowControl(QSerialPort::NoFlowControl);
     sock.setBaudRate(QSerialPort::Baud9600);
     sock.setDataBits(QSerialPort::Data8);
+    sock.setDataTerminalReady(false);
     if(sock.open(QIODevice::ReadWrite)){
         emit connected();
     }
@@ -141,14 +141,17 @@ void DeviceManager::dataRecieved(){
     qDebug() << "got bytes";
     if(sock.bytesAvailable() >= 2){
         //there is data available
-        char functionID;
-        char payloadSize;
-        sock.peek(&payloadSize, 1);
-        sock.read(&functionID, 1);
+        uint16_t data;
+        char* ptr = (char*)(&data);
+        sock.peek(ptr, 2);
+        char payloadSize = ptr[0];
+        char functionID = ptr[1];
+        if(sock.bytesAvailable() < payloadSize)
+            return;
         if(functionID == id_calibrationDataResponse){
             qDebug() << "got calibration data";
             //4 bytes for pos, 2 bytes for axis dirs, 8x4=32 for tray positions = 38
-            sock.read((char*)&deviceCalibration.well_dist_x, 2);
+            sock.read((char*)(&deviceCalibration.well_dist_x), 2);
             sock.read((char*)&deviceCalibration.well_dist_y, 2);
             sock.read((char*)&deviceCalibration.x_axis_dir, 1);
             sock.read((char*)&deviceCalibration.y_axis_dir, 1);
@@ -156,7 +159,12 @@ void DeviceManager::dataRecieved(){
                 sock.read((char*)&deviceCalibration.getTray(i).xpos, 2);
                 sock.read((char*)&deviceCalibration.getTray(i).ypos, 2);
             }
+            qDebug() << "config: " << "well dist x " << deviceCalibration.well_dist_x << " well dist y " << deviceCalibration.well_dist_y
+                     << " x axis dir " << deviceCalibration.x_axis_dir << "y axis dir" << deviceCalibration.y_axis_dir;
+            for(int i = 0; i < 8; i++)
+                qDebug() << "tray #" << i << " x:" << deviceCalibration.trays[i].xpos << " y: " << deviceCalibration.trays[i].ypos;
             qDebug() << "bytes left: " << sock.bytesAvailable();
+            sock.readAll();
             emit calibrationDataRecieved();
         }
     }

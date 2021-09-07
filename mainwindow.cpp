@@ -1,6 +1,4 @@
-
 #include "mainwindow.h"
-#include "uint32spinbox.h"
 #include "ui_mainwindow.h"
 #include "imagedialog.h"
 #include <string>
@@ -11,6 +9,8 @@
 #include <QAction>
 #include "deviceManager.h"
 #include "calibrationdialog.h"
+#include "traysequenceitem.h"
+#include "addtraydialog.h"
 
 
 DeviceManager deviceManager;
@@ -21,12 +21,12 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     connect(&deviceManager, &DeviceManager::connected, this, &MainWindow::SerialConnected);
     connect(&deviceManager, &DeviceManager::connectionTerminated, this, &MainWindow::SerialConnectionTerminated);
     connect(&deviceManager, &DeviceManager::calibrationDataRecieved, this, &MainWindow::on_calibration_recieve);
-    ui->spinTimeWell->setRange(0, INT_MAX);
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
         qDebug() << "Name : " << info.portName();
         qDebug() << "Description : " << info.description();
         ui->portCombo->addItem(info.portName());
      }
+    ui->trayList->setSelectionMode(QAbstractItemView::MultiSelection);
 }
 
 
@@ -37,8 +37,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_startButton_clicked()
 {
-        deviceManager.start();
-        ui->progressBar->setValue(0);
+    for(int i = 0; i < 8; i++){
+        deviceManager.setTrayCalibration(i, 0, 0);
+    }
+    deviceManager.clearTrays();
+    for(int i = 0; i < ui->trayList->count(); i++){
+        TraySequenceItem* item = (TraySequenceItem*)ui->trayList->item(i);
+        qDebug() << "sending tray item #" << i;
+        deviceManager.addTray(item->getIndex(), item->getTime(), item->getStartWell(), item->getEndWell());
+    }
 }
 
 void MainWindow::on_refreshButton_clicked()
@@ -62,21 +69,19 @@ void MainWindow::on_calibration_recieve()
 void MainWindow::SerialConnectionTerminated(QString error)
 {
     auto dialog = new QMessageBox();
-    if(error == NULL)
+    if(error != NULL)
         dialog->setText("Serial connection closed unexpectedly: " + error);
     else
         dialog->setText("Serial connection closed.");
     dialog->exec();
-    ui->connectButton->setEnabled(true);
+    delete dialog;
     ui->frame->setEnabled(false);
 }
 
 void MainWindow::SerialConnected()
 {
-    auto dialog = new QMessageBox();
-    dialog->setText("Serial connection opened");
-    dialog->exec();
     ui->frame->setEnabled(true);
+    ui->trayList->clear();
 }
 
 
@@ -84,7 +89,6 @@ void MainWindow::on_connectButton_clicked()
 {
     auto serialport = QSerialPortInfo(ui->portCombo->currentText());
     deviceManager.connectToPort(serialport);
-    ui->connectButton->setEnabled(false);
 }
 
 void MainWindow::on_calibrateButton_clicked()
@@ -98,5 +102,37 @@ void MainWindow::on_actionWell_Layout_triggered()
     auto dialog = new ImageDialog(this, ":/images/96-well-temp-diagram.png", "Well Diagram");
     dialog->exec();
     delete dialog;
+}
+
+
+void MainWindow::on_tray_add_clicked()
+{
+    auto dialog = new addTrayDialog(this);
+    dialog->exec();
+    delete dialog;
+}
+
+void MainWindow::newTraySequence(int time, int startwell, int endwell, int index)
+{
+
+    for(int i = 0; i < ui->trayList->count(); i++){
+        if(((TraySequenceItem*)ui->trayList->item(i))->getIndex() == index){
+            auto keepTray = QMessageBox::question(this, "Tray In Use","Tray already in use, replace old tray?", QMessageBox::Yes | QMessageBox::No);
+            if(keepTray == QMessageBox::Yes){
+                delete ui->trayList->takeItem(i);
+            }
+        }
+    }
+    auto item = new TraySequenceItem(time, startwell, endwell, index);
+    ui->trayList->addItem(item);
+}
+
+
+void MainWindow::on_tray_remove_clicked()
+{
+    for(auto i : ui->trayList->selectedItems()){
+        ui->trayList->removeItemWidget(i);
+        delete i;
+    }
 }
 

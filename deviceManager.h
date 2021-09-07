@@ -27,7 +27,6 @@ class DeviceManager : public QObject
 protected:
     QSerialPort sock;
     QByteArray buff;
-    bool connectionStatus;
     CalibrationValues deviceCalibration;
 public:
     DeviceManager();

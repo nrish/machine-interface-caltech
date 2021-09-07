@@ -16,7 +16,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_connectButton_clicked();
+        void on_connectButton_clicked();
 
     void on_startButton_clicked();
 
@@ -31,6 +31,12 @@ private slots:
     void SerialConnectionTerminated(QString error);
 
     void SerialConnected();
+
+    void on_tray_add_clicked();
+    void on_tray_remove_clicked();
+
+public slots:
+    void newTraySequence(int time, int startwell, int endwell, int index);
 
 private:
     Ui::MainWindow *ui;

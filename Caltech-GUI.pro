@@ -9,24 +9,27 @@ CONFIG += c++11 static console
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    addtraydialog.cpp \
     calibrationdialog.cpp \
     calibrationvalues.cpp \
     deviceManager.cpp \
     imagedialog.cpp \
     main.cpp \
     mainwindow.cpp \
-    uint32spinbox.cpp
+    traysequenceitem.cpp
 
 HEADERS += \
+    addtraydialog.h \
     calibrationdialog.h \
     calibrationvalues.h \
     deviceManager.h \
     imagedialog.h \
     mainwindow.h \
-    uint32spinbox.h \
-    serialData.h
+    serialData.h \
+    traysequenceitem.h
 
 FORMS += \
+    addtraydialog.ui \
     calibrationdialog.ui \
     imagedialog.ui \
     mainwindow.ui

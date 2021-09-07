@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>646</width>
-    <height>584</height>
+    <width>583</width>
+    <height>512</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -30,118 +30,10 @@
        <item>
         <widget class="QGroupBox" name="groupBoxSettings">
          <property name="title">
-          <string>Settings</string>
+          <string>Sequence Settings</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="3" column="1">
-           <widget class="QSpinBox" name="endWell">
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>96</number>
-            </property>
-            <property name="value">
-             <number>96</number>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QSpinBox" name="spinTimeWell"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>Tray</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QSpinBox" name="startWell">
-            <property name="maximum">
-             <number>96</number>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QComboBox" name="trayCombo">
-            <item>
-             <property name="text">
-              <string>Tray 1</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Tray 2</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Tray 3</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Tray 4</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Tray 5</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Tray 6</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Tray 7</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Tray 8</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Tray 9</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Tray 10</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>Start well index</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>End well index</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>Milliseconds per well</string>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="1">
-           <widget class="QListView" name="trayList"/>
-          </item>
-          <item row="6" column="0" rowspan="2">
+          <item row="2" column="0" rowspan="2">
            <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
              <widget class="QPushButton" name="tray_add">
@@ -158,6 +50,9 @@
              </widget>
             </item>
            </layout>
+          </item>
+          <item row="2" column="1" rowspan="2">
+           <widget class="QListWidget" name="trayList"/>
           </item>
          </layout>
         </widget>
@@ -222,7 +117,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Port Select</string>
+          <string>Device Select</string>
          </property>
         </widget>
        </item>
@@ -253,7 +148,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>646</width>
+     <width>583</width>
      <height>30</height>
     </rect>
    </property>
