@@ -7,17 +7,17 @@
 #include "calibrationvalues.h"
 typedef unsigned char byte;
 
-const unsigned char id_printTestInfo = 0;
-const unsigned char id_setPos = 1;
-const unsigned char id_home = 2;
-const unsigned char id_addTray = 3;
-const unsigned char id_removeTray = 4;
-const unsigned char id_clearTrays = 5;
-const unsigned char id_start = 6;
-const unsigned char id_setDistCalibration = 7;
-const unsigned char id_setTrayCalibration = 8;
-const unsigned char id_confirmCalibration = 9;
-const unsigned char id_getCalibrationData = 10;
+const char id_printTestInfo = 0;
+const char id_setPos = 1;
+const char id_home = 2;
+const char id_addTray = 3;
+const char id_removeTray = 4;
+const char id_clearTrays = 5;
+const char id_start = 6;
+const char id_setDistCalibration = 7;
+const char id_setTrayCalibration = 8;
+const char id_confirmCalibration = 9;
+const char id_getCalibrationData = 10;
 
 const unsigned char id_calibrationDataResponse = 51;
 

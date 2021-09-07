@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "traysequenceitem.h"
+#include "addtraydialog.h"
 #include "imagedialog.h"
 #include <string>
 #include <QDebug>
@@ -7,11 +9,6 @@
 #include <QSerialPortInfo>
 #include <QMessageBox>
 #include <QAction>
-#include "deviceManager.h"
-#include "calibrationdialog.h"
-#include "traysequenceitem.h"
-#include "addtraydialog.h"
-
 
 DeviceManager deviceManager;
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
@@ -27,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
         ui->portCombo->addItem(info.portName());
      }
     ui->trayList->setSelectionMode(QAbstractItemView::MultiSelection);
+    calibrationDialog = new CalibrationDialog(this, &deviceManager);
 }
 
 
@@ -57,9 +55,7 @@ void MainWindow::on_refreshButton_clicked()
 
 void MainWindow::on_calibration_recieve()
 {
-    auto dialog = new CalibrationDialog(this, &deviceManager);
-    dialog->exec();
-    delete dialog;
+    calibrationDialog->show();
 }
 
 
@@ -86,11 +82,6 @@ void MainWindow::on_connectButton_clicked()
 {
     auto serialport = QSerialPortInfo(ui->portCombo->currentText());
     deviceManager.connectToPort(serialport);
-}
-
-void MainWindow::on_calibrateButton_clicked()
-{
-    deviceManager.getCalibrationData();
 }
 
 
@@ -132,5 +123,12 @@ void MainWindow::on_tray_remove_clicked()
         ui->trayList->removeItemWidget(i);
         delete i;
     }
+}
+
+
+void MainWindow::on_calibrateButton_clicked()
+{
+    qDebug() << "requesting calibration data";
+    deviceManager.getCalibrationData();
 }
 

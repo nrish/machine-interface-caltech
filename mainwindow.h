@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include <QMainWindow>
-#include <QSerialPort>
-
+#include "deviceManager.h"
+#include "calibrationdialog.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -20,8 +20,6 @@ private slots:
 
     void on_startButton_clicked();
 
-    void on_calibrateButton_clicked();
-
     void on_actionWell_Layout_triggered();
 
     void on_refreshButton_clicked();
@@ -35,10 +33,14 @@ private slots:
     void on_tray_add_clicked();
     void on_tray_remove_clicked();
 
+    void on_calibrateButton_clicked();
+
 public slots:
     void newTraySequence(int time, int startwell, int endwell, int index);
 
 private:
+    DeviceManager deviceManager;
+    CalibrationDialog* calibrationDialog;
     Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H

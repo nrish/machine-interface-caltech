@@ -84,6 +84,13 @@
           <string>Sequence Settings</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
+          <item row="4" column="0">
+           <widget class="QPushButton" name="tray_remove">
+            <property name="text">
+             <string>remove tray</string>
+            </property>
+           </widget>
+          </item>
           <item row="4" column="1">
            <widget class="QPushButton" name="tray_add">
             <property name="text">
@@ -94,17 +101,17 @@
           <item row="2" column="0" rowspan="2" colspan="2">
            <widget class="QListWidget" name="trayList"/>
           </item>
-          <item row="6" column="0" colspan="2">
+          <item row="8" column="0" colspan="2">
            <widget class="QPushButton" name="startButton">
             <property name="text">
              <string>Start seqence</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
-           <widget class="QPushButton" name="tray_remove">
+          <item row="9" column="0" colspan="2">
+           <widget class="QPushButton" name="calibrateButton">
             <property name="text">
-             <string>remove tray</string>
+             <string>Calibrate</string>
             </property>
            </widget>
           </item>
