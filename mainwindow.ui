@@ -140,7 +140,6 @@
      <property name="title">
       <string>Tray Layout</string>
      </property>
-     <addaction name="actionTray_Layout_2"/>
      <addaction name="actionWell_Layout"/>
     </widget>
     <addaction name="actionAbout"/>
