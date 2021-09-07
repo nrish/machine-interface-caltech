@@ -24,22 +24,26 @@ find_package(Qt5 5.15 COMPONENTS Widgets SerialPort REQUIRED)
 add_executable(machinegui WIN32)
 
 target_sources(machinegui PRIVATE
-    main.cpp
+    addtraydialog.cpp
+    addtraydialog.h
     calibrationdialog.cpp
     calibrationdialog.h
+    calibrationvalues.cpp
+    calibrationvalues.h
+    deviceManager.cpp
+    deviceManager.h
     imagedialog.cpp
     imagedialog.h
+    main.cpp
     mainwindow.cpp
-    mainwindow.h
-    serialmanager.cpp
-    serialmanager.h
-    uint32spinbox.cpp
-    uint32spinbox.h
+    imagedialog.h
+    traysequenceitem.cpp
+    traysequenceitem.h
+
+    addtraydialog.ui
     calibrationdialog.ui
     imagedialog.ui
     mainwindow.ui
-    resources.qrc
-    serialData/serialData.h
 )
 
 target_link_libraries(machinegui Qt5::Widgets Qt5::SerialPort)
