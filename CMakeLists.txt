@@ -64,7 +64,7 @@ set(CPACK_COMPONENTS_ALL base)
 # Keeps stuff clean...
 add_custom_command(
     TARGET machinegui POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/bundle
+    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/libs
 )
 
 if(GENERATE_BUNDLE)
@@ -87,7 +87,7 @@ if(GENERATE_BUNDLE)
     # Sets a task to place the shared libraries in the build directory "bundle" folder and place it in the install binary directory (where the binary is).
     # Furthermore, the COMPONENT requirement makes it such that this only happens when the "base" conponent is activitated (which occurs during install)
     install(
-        DIRECTORY ${CMAKE_BINARY_DIR}/bundle/
+        DIRECTORY ${CMAKE_BINARY_DIR}/libs/
         DESTINATION ${CMAKE_INSTALL_BINDIR}
         COMPONENT base
     )

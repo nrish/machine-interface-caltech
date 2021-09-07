@@ -53,7 +53,7 @@ function(windeployqt target)
         get_filename_component(filename "${lib}" NAME)
         add_custom_command(TARGET ${target} POST_BUILD
             COMMAND "${CMAKE_COMMAND}" -E
-                copy_if_different "${lib}" \"$<TARGET_FILE_DIR:${target}>/bundle\"
+                copy_if_different "${lib}" \"$<TARGET_FILE_DIR:${target}>/libs\"
             COMMENT "Copying ${filename}..."
         )
     endforeach()
@@ -64,7 +64,7 @@ endfunction()
 function(macdeployqt target)
     add_custom_command(TARGET ${target} POST_BUILD
         COMMAND "${MACDEPLOYQT_EXECUTABLE}"
-            \"$<TARGET_FILE_DIR:${target}>/bundle\"
+            \"$<TARGET_FILE_DIR:${target}>/libs\"
             -always-overwrite
         COMMENT "Deploying Qt..."
     )
@@ -73,7 +73,7 @@ endfunction()
 function(linuxdeployqt target)
     add_custom_command(TARGET ${target} POST_BUILD
         COMMAND "${LINUXDEPLOYQT_EXECUTABLE}"
-            \"$<TARGET_FILE_DIR:${target}>/bundle\"
+            \"$<TARGET_FILE_DIR:${target}>/libs\"
             -always-overwrite
         COMMENT "Deploying Qt..."
     )
