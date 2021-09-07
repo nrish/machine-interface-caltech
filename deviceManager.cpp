@@ -157,6 +157,7 @@ void DeviceManager::connectToPort(QSerialPortInfo port)
     sock.setStopBits(QSerialPort::OneStop);
     sock.setBaudRate(QSerialPort::Baud9600);
     sock.setDataBits(QSerialPort::Data8);
+    sock.setDataTerminalReady(false);
     if(sock.open(QIODevice::ReadWrite)){
         emit connected();
     }

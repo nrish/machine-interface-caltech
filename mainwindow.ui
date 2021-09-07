@@ -84,55 +84,27 @@
           <string>Sequence Settings</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="2" column="0" rowspan="2">
-           <widget class="QGroupBox" name="">
-            <layout class="QVBoxLayout" name="verticalLayout_2">
-             <item>
-              <widget class="QPushButton" name="tray_add">
-               <property name="text">
-                <string>add tray</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="tray_remove">
-               <property name="text">
-                <string>remove tray</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+          <item row="4" column="1">
+           <widget class="QPushButton" name="tray_add">
+            <property name="text">
+             <string>add tray</string>
+            </property>
            </widget>
           </item>
-          <item row="2" column="1" rowspan="2">
+          <item row="2" column="0" rowspan="2" colspan="2">
            <widget class="QListWidget" name="trayList"/>
           </item>
-          <item row="4" column="0" colspan="2">
+          <item row="6" column="0" colspan="2">
            <widget class="QPushButton" name="startButton">
             <property name="text">
              <string>Start seqence</string>
             </property>
            </widget>
           </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBoxStatus">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="title">
-          <string>Status</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <item row="4" column="0" colspan="2">
-           <widget class="QProgressBar" name="progressBar">
-            <property name="value">
-             <number>0</number>
+          <item row="4" column="0">
+           <widget class="QPushButton" name="tray_remove">
+            <property name="text">
+             <string>remove tray</string>
             </property>
            </widget>
           </item>

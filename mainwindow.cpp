@@ -18,7 +18,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 {
     ui->setupUi(this);
     ui->groupBoxSettings->setEnabled(false);
-    ui->groupBoxStatus->setEnabled(false);
     connect(&deviceManager, &DeviceManager::connected, this, &MainWindow::SerialConnected);
     connect(&deviceManager, &DeviceManager::connectionTerminated, this, &MainWindow::SerialConnectionTerminated);
     connect(&deviceManager, &DeviceManager::calibrationDataRecieved, this, &MainWindow::on_calibration_recieve);
@@ -74,13 +73,11 @@ void MainWindow::SerialConnectionTerminated(QString error)
     dialog->exec();
     delete dialog;
     ui->groupBoxSettings->setEnabled(false);
-    ui->groupBoxStatus->setEnabled(false);
 }
 
 void MainWindow::SerialConnected()
 {
     ui->groupBoxSettings->setEnabled(true);
-    ui->groupBoxStatus->setEnabled(true);
     ui->trayList->clear();
 }
 
